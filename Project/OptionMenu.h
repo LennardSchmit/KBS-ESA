@@ -9,25 +9,26 @@
 class OptionMenu 
 {
 	public:
-	OptionMenu(MI0283QT9 *lcd_g, NunchukLibrary *nc_g);
-	void Update();
-	uint8_t getStatus();
+  	OptionMenu(MI0283QT9 *lcd_g);
+  	void Update();
+  	uint8_t getStatus();
+    
 	private:
-	//------Game Options------//
-	String optionName[4] = {
-		"BrightNess",
-		"GameSpeed",
-		"Bomb Density",
-		"Level Select"
-	};
-	//-----Startup Default----//
-	int option[4] = {
-		0, //Brightness
-		4, //GameSpeed
-		7,  //Bomb Density
-		0   //level
-	};
-	//------------------------//
+  	//------Game Options------//
+  	String optionName[4] = {
+  		"BrightNess",
+  		"GameSpeed",
+  		"Bomb Density",
+  		"Level Select"
+  	};
+  	//-----Startup Default----//
+  	int option[4] = {
+  		9, //Brightness
+  		5, //GameSpeed
+  		7,  //Bomb Density
+  		1   //level
+  	};
+  	//------------------------//
 
 	NunchukLibrary *nc;
 	MI0283QT9 *lcd;

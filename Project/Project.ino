@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Menu.h"
 #include "OptionMenu.h"
+#include "Touch.h"
 
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
@@ -44,14 +45,15 @@ int main(void){
  	init();
 	MP = new Map(level1);
 	lcd = new MI0283QT9();
-	lcd->begin();
 	NC = new NunchukLibrary();
+  lcd->begin();
+  Touch touch(lcd);
 	
 	while(1)
 	{
 		if(gameStatus == 0)
 		{
-			Menu* menu = new Menu(lcd, NC);
+			Menu* menu = new Menu(lcd);
 			while(1)
 			{
 				menu->Update();
@@ -79,7 +81,7 @@ int main(void){
 
 		if(gameStatus == 2)
 		{
-			OptionMenu* optMenu = new OptionMenu(lcd, NC);
+			OptionMenu* optMenu = new OptionMenu(lcd);
 			while(1)
 			{
 				optMenu->Update();

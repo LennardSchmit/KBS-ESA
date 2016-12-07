@@ -8,11 +8,11 @@
 #include <arduino.h>
 #include "MI0283QT9.h"
 
-#define OUTSIDE		RGB(162, 152, 105)			//this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
-#define FIELD		RGB(46, 41, 37)				//this is the color for the field you are standing on
-#define BLOCK		RGB(168, 108, 110)			//this is the color for the block that are destroyable
-#define PLAYERA		RGB(255, 0, 0)				
-#define PLAYERB		RGB(0, 255, 0)				
+#define OUTSIDE		RGB( 116, 130, 143) 			//this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
+#define FIELD		RGB(52, 54, 65)		//this is the color for the field you are standing on
+#define BLOCK		RGB(194, 91, 86)			//this is the color for the block that are destroyable
+#define PLAYERA		RGB(225, 150, 0) 			
+#define PLAYERB		RGB(122, 186, 122) 		
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
@@ -47,7 +47,7 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
 			  break;
 
 			  case 4:			//player (received by IRCOM)
-			  lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERA);
+			  lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERB);
 			  mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
 			  break;
 		  }

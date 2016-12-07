@@ -60,11 +60,11 @@ uint8_t NunchukLibrary::ANupdate()
   AN_sendByte(0x00, 0x00);
 
   //Check in what direction the nunchuk tumbstick is moved and give it to the variable "status"
-  if((analogX - beginPossX) > 50)		status = 2;//X AXIS RIGHT
-  else if((beginPossX - analogX) > 50) status = 1;//X AXIS LEFT
+  if((analogX - beginPossX) > 5)		status = 2;//X AXIS RIGHT
+  else if((beginPossX - analogX) > 5) status = 1;//X AXIS LEFT
   else								status = 0;//X AXIS NO MOVEMENT
-  if((analogY - beginPossY) > 50)		status = 3;//Y AXIS UP
-  else if((beginPossY - analogY) > 50) status = 4;//Y AXIS DOWN
+  if((analogY - beginPossY) > 5)		status = 3;//Y AXIS UP
+  else if((beginPossY - analogY) > 5) status = 4;//Y AXIS DOWN
   return status;
 }
 
