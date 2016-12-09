@@ -8,7 +8,7 @@
 #include <arduino.h>
 #include "MI0283QT9.h"
 
-#define OUTSIDE		RGB( 116, 130, 143) 			//this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
+#define OUTSIDE		RGB(116, 130, 143) 			//this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
 #define FIELD		RGB(52, 54, 65)		//this is the color for the field you are standing on
 #define BLOCK		RGB(194, 91, 86)			//this is the color for the block that are destroyable
 #define PLAYERA		RGB(225, 150, 0) 			
@@ -16,7 +16,6 @@
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
-//#define DEBUG
 
 GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
   lcd = lcd_g;
@@ -41,7 +40,8 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
 			  break;
 
 			  case 3:			//player (Nunchuck)
-			  lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERA);
+			  WA = new WalkingAnimation(lcd, leftcornerX + 6, leftcornerY + 4);
+			  //lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERA);
 			  pl_nc->setPosition(x, y);			//update player position so it is able to move
 			  mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
 			  break;
@@ -62,6 +62,15 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
 /************************************************************************/
 void GameField::updateGameField_pl_nc(){
 	lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, FIELD);	//draw background
-	lcd->fillRect(pl_nc->getxPosPx() + OFFSETX, pl_nc->getyPosPx() + OFFSETY, SIZE, SIZE, PLAYERA);		//draw player
+	switch(pl_nc->getNCStatus()){
+	  case 0: WA->drawStanding(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
+    case 1: WA->drawLeft(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
+    case 2: WA->drawRight(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
+    case 3: WA->drawUp(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
+    case 4: WA->drawDown(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
+	}
+	//lcd->fillRect(pl_nc->getxPosPx() + OFFSETX, pl_nc->getyPosPx() + OFFSETY, SIZE, SIZE, PLAYERA);		//draw player
 	pl_nc->updatePos();		//update player so the old position is the current position
 }
+
+

@@ -4,6 +4,7 @@
 #include <MI0283QT9.h>
 #include "Map.h"
 #include "Player.h"
+#include "WalkingAnimation.h"
 
 class GameField {
 	public:
@@ -12,6 +13,7 @@ class GameField {
 	private:
     MI0283QT9* lcd;
     Map* mp;
-	Player* pl_nc;
+	  Player* pl_nc;
+    WalkingAnimation* WA;
 };
 #endif

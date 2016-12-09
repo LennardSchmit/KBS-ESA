@@ -14,6 +14,7 @@ class Player{
 		int getOldXPosPx();			//returns the pixel position of the old xPos
 		int getOldYPosPx();			//returns the pixel position of the old yPos
 		void updatePos();			//updates the old position values with the current position values
+    uint8_t getNCStatus();
    
 	private:
 		NunchukLibrary* NC;

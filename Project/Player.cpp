@@ -3,6 +3,7 @@
 #include "Map.h"
 
 #define SIZE 24				//is the size of one block
+#define STEPOFFSET 2
 
 Player::Player(NunchukLibrary* NC_g, Map* MP_g){
   NC = NC_g;
@@ -43,7 +44,17 @@ bool Player::updatePlayer(){
 					xStep -= stepsize;					//updates step (position)
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			}
+			} else if(yStep <= stepsize * STEPOFFSET){
+        yStep -= stepsize;
+        returnbool = true;  
+      } else if(SIZE - yStep <= stepsize * STEPOFFSET){
+        yStep += stepsize;
+        if(yStep == SIZE){
+          yPos++;
+          yStep = 0;
+        }
+        returnbool = true;  
+      }
 		break;
 
 		case 2:											//RIGHT
@@ -61,7 +72,17 @@ bool Player::updatePlayer(){
 					}
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			}
+			} else if(yStep <= stepsize * STEPOFFSET){
+        yStep -= stepsize;
+        returnbool = true;
+      } else if(SIZE - yStep <= stepsize * STEPOFFSET){
+        yStep += stepsize;
+        if(yStep == SIZE){
+          yPos++;
+          yStep = 0;
+        }
+        returnbool = true;
+      }
 		break;
 
 		case 3:											//UP
@@ -78,7 +99,17 @@ bool Player::updatePlayer(){
 					yStep -= stepsize;					//updates step (position)
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			}
+			} else if(xStep <= stepsize * STEPOFFSET){
+       xStep -= stepsize;
+        returnbool = true;
+      } else if(SIZE - xStep <= stepsize * STEPOFFSET){
+        xStep += stepsize;
+        if(xStep == SIZE){
+          xPos++;
+          xStep = 0;
+        }
+        returnbool = true;
+      }
 		break;
 
 		case 4:											//DOWN			
@@ -96,7 +127,17 @@ bool Player::updatePlayer(){
 					}
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			}
+			} else if(xStep <= stepsize * STEPOFFSET){
+       xStep -= stepsize;
+        returnbool = true;
+      } else if(SIZE - xStep <= stepsize * STEPOFFSET){
+        xStep += stepsize;
+        if(xStep == SIZE){
+          xPos++;
+          xStep = 0;
+        }
+        returnbool = true;
+      }
 		break;
 		
 	}
@@ -123,4 +164,8 @@ void Player::updatePos(){
 	oldYPos = yPos;
 	oldXStep = xStep;
 	oldYStep = yStep;
+}
+
+uint8_t Player::getNCStatus(){
+  return NC->getStatus();
 }

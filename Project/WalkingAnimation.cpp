@@ -1,5 +1,6 @@
 #include "WalkingAnimation.h"
 #include <MI0283QT9.h>
+#include "Arduino.h"
 
 #define BACKGROUND RGB(52, 54, 65)
 #define BLACK   RGB(32, 32, 32)     //1
@@ -15,15 +16,100 @@
 #define WHITE2  RGB(220, 220, 220)  //11
 #define BLUE1   RGB(128, 160, 192)  //12
 #define BLUE2   RGB(64, 96, 128)    //13
+//#define DEBUG
 
-
-WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g){
+uint8_t Down[8][12] = {
+      {0,0,0, 1, 4,3,4, 4, 1,0,0,0}, 
+      {0,0,1, 3, 2,2,2, 3, 4,1,0,0},  
+      {0,1,1, 6, 5,6,8, 9, 3,1,1,0}, 
+      {1,9,7, 5, 5,5,6, 5, 5,7,8,1},  
+      {1,9,6, 6, 6,6,9, 6, 6,6,9,1}, 
+      {0,1,6,11,13,8,8,13,11,6,1,0},
+      {0,1,9,10,12,8,8,12,10,9,1,0},
+      {0,0,1, 9, 8,8,8, 8, 9,1,0,0} 
+    };
+     uint8_t DownStanding[8][12] = {
+      {0,1,3,1, 1,9,9,1, 1,4,1,0},
+      {1,5,5,4, 3,1,1,4, 3,6,5,1},
+      {1,9,6,1, 2,2,2,3, 1,6,9,1}, 
+      {1,8,9,0, 3,2,3,3, 1,9,8,1}, 
+      {0,1,1,4, 8,8,8,9, 4,1,1,0}, 
+      {0,1,6,1, 4,3,3,4, 0,6,1,0}, 
+      {0,1,5,6, 1,1,1,1, 6,5,1,0}, 
+      {0,0,1,1, 1,0,0,0, 1,1,0,0}, 
+    };
+     uint8_t DownWalking[8][12] = {
+      {0,1,6,1, 1,9,9,1, 1,6,9,1},
+      {0,1,5,5, 1,1,1,4, 1,6,5,1},
+      {0,1,6,8, 8,1,2,3, 4,1,1,0}, 
+      {0,0,1,9, 8,1,3,1, 1,1,1,0}, 
+      {0,0,1,1, 1,8,1,5, 5,1,1,0}, 
+      {0,0,1,1, 4,3,1,6, 6,5,1,0}, 
+      {0,0,0,1, 1,1,1,1, 1,6,1,0}, 
+      {0,0,0,0, 0,1,1,1, 1,1,0,0}, 
+    };
+     uint8_t Sideway[8][12]{
+      {0,0,0,1, 1,4,4,1, 1,0,0,0},
+      {0,0,1,4, 3,2,2,8, 9,1,1,0},
+      {0,1,2,2, 2,3,9,1, 1,5,6,1}, 
+      {1,3,4,1, 9,8,1,6, 5,7,6,5}, 
+      {4,3,1,8, 1,1,5,5, 6,9,1,1}, 
+      {4,4,1,8,8,6,7,11,13,8,1,0}, 
+      {1,4,1,9,8,7,7,10,12,8,1,1}, 
+      {1,4,1,1, 9,8,7,8, 8,9,1,0}, 
+    };
+     uint8_t SidewayWalking[8][12]{
+      {0,1,1,1, 1,1,9,9, 1,1,0,0},
+      {0,1,9,1, 4,1,1,1, 1,1,1,0},
+      {0,1,5,1, 3,4,6,5, 5,8,8,1}, 
+      {0,0,1,1, 4,3,4,1, 6,9,8,1}, 
+      {0,0,1,9, 8,8,8,9, 1,1,1,0}, 
+      {0,1,7,1, 1,4,3,4, 1,6,5,1}, 
+      {0,1,6,6, 7,1,1,1, 6,5,5,1}, 
+      {0,0,1,1, 1,1,1,1, 1,1,1,0}, 
+    };
+     uint8_t SidewayStanding[8][12]{
+      {0,1,0,0, 1,1,9,9, 1,1,0,0},
+      {0,0,0,0, 1,3,1,1, 6,1,0,0},
+      {0,0,0,0, 1,2,3,7, 5,1,0,0}, 
+      {0,0,0,1, 1,3,2,1, 8,8,1,0}, 
+      {0,0,0,1, 9,8,8,1, 9,8,1,0}, 
+      {0,0,0,0, 1,1,3,2, 1,1,1,0}, 
+      {0,0,0,0, 1,7,1,6, 5,5,1,0}, 
+      {0,0,0,0, 0,1,1,1, 1,1,0,0}, 
+    };
+     uint8_t Up[8][12]{
+      {0,0,0,0, 0,1,5,6, 1,0,0,0},
+      {0,0,0,1, 1,6,5,5, 6,1,0,0},
+      {0,1,1,6, 8,8,8,6, 5,1,1,0}, 
+      {1,8,1,9, 3,3,3,4, 9,1,8,1}, 
+      {0,9,1,4, 1,4,2,3, 1,1,9,1}, 
+      {0,1,9,1, 3,3,2,2, 3,1,1,0}, 
+      {0,1,1,1, 4,3,3,2, 4,1,1,0}, 
+      {0,0,1,7, 1,3,4,3, 1,1,1,0}, 
+    };
+     uint8_t UpWalking[8][12]{
+      {0,1,3,1, 1,1,3,4, 1,7,9,1},
+      {1,5,5,4, 3,1,4,4, 1,7,5,1},
+      {1,9,5,1, 2,2,1,1, 1,1,1,0}, 
+      {1,8,9,1, 3,2,3,3, 9,1,0,0}, 
+      {0,1,1,4, 8,8,8,9, 4,1,0,0}, 
+      {0,1,7,1, 4,3,4,1, 1,6,1,0}, 
+      {0,0,1,1, 1,1,1,6, 5,5,1,0}, 
+      {0,0,0,0, 0,0,0,1, 1,1,0,0}, 
+    };
+    
+WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g, int x, int y){
+  mirrorTop = 0;
+  mirrorBottom = 0;
+  leg = 0;
   lcd = lcd_g;
+  drawStanding(x, y);
 }
 
 //leg is the feet that is in the air, 0 is right and 1 is left.
-void WalkingAnimation::drawCharacter(uint8_t x, uint8_t y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]){
-  //lcd->fillRect(x-1, y-1, 14, 18 , BACKGROUND);
+void WalkingAnimation::drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]){
+  lcd->fillRect(x-2, y-2, 16, 20 , BACKGROUND);
   if(!mirrorTop)
   {
     drawPart(x, y, characterTop);
@@ -43,7 +129,7 @@ void WalkingAnimation::drawCharacter(uint8_t x, uint8_t y, uint8_t mirrorTop, ui
   }  
 }
 
-void WalkingAnimation::drawPart(uint8_t x, uint8_t y, uint8_t part[8][12]){
+void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
 	for(int i = 0; i < 8; i++){
 		for(int p = 0; p < 12; p++){
 			switch(part[i][p]){
@@ -66,7 +152,7 @@ void WalkingAnimation::drawPart(uint8_t x, uint8_t y, uint8_t part[8][12]){
   } 
 }
 
-void WalkingAnimation::drawMirrorPart(uint8_t x, uint8_t y, uint8_t part[8][12]){
+void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
 	for(uint8_t i = 0; i < 8; i++){
 		uint8_t s = 0;
 		for(uint8_t p = 11; p < 255; p--){
@@ -103,18 +189,18 @@ void WalkingAnimation::mirrorAll(){
   }
 }
 
-void WalkingAnimation::drawUp(uint8_t x, uint8_t y){
+void WalkingAnimation::drawUp(int x, int y){
   drawCharacter(x, y, mirrorTop, mirrorBottom, Up, UpWalking);
   mirrorAll();
 }
 
-void WalkingAnimation::drawDown(uint8_t x, uint8_t y){
+void WalkingAnimation::drawDown(int x, int y){
   mirrorTop = 1;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Down, DownWalking);
   mirrorAll();
 }
 
-void WalkingAnimation::drawRight(uint8_t x, uint8_t y){
+void WalkingAnimation::drawRight(int x, int y){
   mirrorTop = 0;
   mirrorBottom = 0;
   if(leg){
@@ -126,7 +212,7 @@ void WalkingAnimation::drawRight(uint8_t x, uint8_t y){
   }
 }
 
-void WalkingAnimation::drawLeft(uint8_t x, uint8_t y){
+void WalkingAnimation::drawLeft(int x, int y){
   mirrorTop = 1;
   mirrorBottom = 1;
   if(leg){
@@ -138,9 +224,8 @@ void WalkingAnimation::drawLeft(uint8_t x, uint8_t y){
   }
 }
 
-void WalkingAnimation::drawStanding(uint8_t x, uint8_t y){
+void WalkingAnimation::drawStanding(int x, int y){
   mirrorTop = 0;
   mirrorBottom = 0;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Down, DownStanding);
 }
-
