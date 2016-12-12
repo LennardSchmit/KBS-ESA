@@ -11,13 +11,13 @@
 #include "Menu.h"
 #include "OptionMenu.h"
 #include "Touch.h"
-
+#define DEBUG
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
 
-uint8_t gameStatus = 0;
+uint8_t gameStatus = 1;
 
 uint8_t level1[9][11] ={
   {3,0,0,0,0,0,0,0,0,0,0},
@@ -34,13 +34,17 @@ uint8_t level1[9][11] ={
 Map* MP;
 MI0283QT9* lcd;
 NunchukLibrary* NC;
-Player* playerNC;
+//Player* playerNC;
 GameField* gameField;
 
 volatile uint8_t timer2_counter;    //DIT IS DE TIMER
 char tmp[128];
 
 int main(void){
+  #ifdef DEBUG
+  Serial.begin(9600);
+  Serial.println("Start Serial Monitor");
+  #endif
  	init();
 	MP = new Map(level1);
 	lcd = new MI0283QT9();
@@ -50,7 +54,6 @@ int main(void){
 	
 	while(1)
 	{
-		/*
 		if(gameStatus == 0)
 		{
 			Menu* menu = new Menu(lcd);
@@ -64,11 +67,14 @@ int main(void){
 				}
 			}
 			delete menu;
-		}*/
+		}
 				
 		if(gameStatus == 1)
 		{
-			Player* playerA = new Player_NC(MP, NC);
+      #ifdef DEBUG
+      Serial.println("Before Player");
+      #endif
+			Player* playerNC = new Player_NC(MP, NC);
 			gameField = new GameField(lcd, MP, playerNC);
 			while(1){
 				NC->ANupdate();
@@ -94,8 +100,8 @@ int main(void){
 			delete optMenu;
 		}
 	}
-};
 }
+
 /*
 ISR(TIMER2_COMPA_vect)        // interrupt service routine
 {

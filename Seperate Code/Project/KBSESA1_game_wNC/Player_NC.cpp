@@ -6,17 +6,12 @@
 #define STEPOFFSET 2
 
 #include "Player_NC.h"
-/*
-Player_NC::Player_NC(Map* MP_g, NunchukLibrary* NC_g){
-	NC = NC_g;
-}*/
+
+Player_NC::~Player_NC(){}
+
 bool Player_NC::updatePlayer(){
 	bool returnbool = false;
-	/*
-	if((xPos + yPos) == 0){
-		//check if block contains a power up
-	}
-	*/
+  status = NC->getStatus();
 	switch (NC->getStatus())							//switches to the direction the nunchuck is positioned options are left - right - up - down
 	{
 
@@ -36,7 +31,8 @@ bool Player_NC::updatePlayer(){
 				}
 			} else if(yStep <= stepsize * STEPOFFSET){
         yStep -= stepsize;
-        returnbool = true;  
+        returnbool = true; 
+        status = 3; 
       } else if(SIZE - yStep <= stepsize * STEPOFFSET){
         yStep += stepsize;
         if(yStep == SIZE){
@@ -44,6 +40,7 @@ bool Player_NC::updatePlayer(){
           yStep = 0;
         }
         returnbool = true;  
+        status = 4;
       }
 		break;
 
@@ -65,6 +62,7 @@ bool Player_NC::updatePlayer(){
 			} else if(yStep <= stepsize * STEPOFFSET){
         yStep -= stepsize;
         returnbool = true;
+        status = 3;
       } else if(SIZE - yStep <= stepsize * STEPOFFSET){
         yStep += stepsize;
         if(yStep == SIZE){
@@ -72,6 +70,7 @@ bool Player_NC::updatePlayer(){
           yStep = 0;
         }
         returnbool = true;
+        status = 4;
       }
 		break;
 
@@ -92,6 +91,7 @@ bool Player_NC::updatePlayer(){
 			} else if(xStep <= stepsize * STEPOFFSET){
        xStep -= stepsize;
         returnbool = true;
+        status = 1;
       } else if(SIZE - xStep <= stepsize * STEPOFFSET){
         xStep += stepsize;
         if(xStep == SIZE){
@@ -99,6 +99,7 @@ bool Player_NC::updatePlayer(){
           xStep = 0;
         }
         returnbool = true;
+        status = 2;
       }
 		break;
 
@@ -120,6 +121,7 @@ bool Player_NC::updatePlayer(){
 			} else if(xStep <= stepsize * STEPOFFSET){
        xStep -= stepsize;
         returnbool = true;
+        status = 1;
       } else if(SIZE - xStep <= stepsize * STEPOFFSET){
         xStep += stepsize;
         if(xStep == SIZE){
@@ -127,6 +129,7 @@ bool Player_NC::updatePlayer(){
           xStep = 0;
         }
         returnbool = true;
+        status = 2;
       }
 		break;
 		

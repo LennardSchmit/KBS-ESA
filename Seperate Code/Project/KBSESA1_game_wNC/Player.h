@@ -6,7 +6,8 @@
 
 class Player{
 	public:
-		//virtual void pureVirtualFunction() = 0;
+    Player(Map* MP_g):MP(MP_g){}
+		virtual ~Player() = 0;
 		void setPosition(uint8_t xPos_g, uint8_t yPos_g);	//this is called by gamefield to set the location based on the map design in Map.cpp
 		int getxPosPx();				//returns the pixel position of xPos
 		int getyPosPx();				//returns the pixel position of yPos
@@ -14,11 +15,11 @@ class Player{
 		int getOldYPosPx();				//returns the pixel position of the old yPos
 		void updatePos();				//updates the old position values with the current position values
 		virtual bool updatePlayer();	//updates player positions with the values of the nunchuk
-		uint8_t getNCStatus();
-		Player(Map* MP_g);
+		uint8_t getStatus();
+		
 	protected:
 		Map* MP;
-
+    uint8_t status;
 		uint8_t xPos;				//Position on the X axis range 0 - 10	
 		uint8_t yPos;				//Position on the Y axis range 0 - 8
 		uint8_t xStep;				//Offset of xPos can range from 0 - 23 if xStep has a value higher than 0 yStep has to be 0 and vice versa

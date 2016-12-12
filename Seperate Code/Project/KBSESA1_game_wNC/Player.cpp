@@ -4,11 +4,9 @@
 
 #define SIZE 24				//is the size of one block
 #define STEPOFFSET 2
-/*
-Player::Player(Map* MP_g){
-  MP = MP_g;
-}
-*/
+
+Player::~Player(){}
+
 void Player::setPosition(uint8_t xPos_g, uint8_t yPos_g){
 	xPos = xPos_g;
 	yPos = yPos_g;
@@ -23,7 +21,6 @@ void Player::setPosition(uint8_t xPos_g, uint8_t yPos_g){
 /* Check player.h for information about those functions                 */
 /************************************************************************/
 int Player::getxPosPx(){
-	
 	return xPos * SIZE + xStep;
 }
 int Player::getyPosPx(){
@@ -42,6 +39,6 @@ void Player::updatePos(){
 	oldYStep = yStep;
 }
 
-uint8_t Player::getNCStatus(){
-  return 1;
+uint8_t Player::getStatus(){
+  return status;
 }

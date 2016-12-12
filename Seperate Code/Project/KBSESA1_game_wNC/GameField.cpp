@@ -11,8 +11,8 @@
 #define OUTSIDE		RGB(116, 130, 143) 			//this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
 #define FIELD		RGB(52, 54, 65)		//this is the color for the field you are standing on
 #define BLOCK		RGB(194, 91, 86)			//this is the color for the block that are destroyable
-#define PLAYERA		RGB(225, 150, 0) 			
-#define PLAYERB		RGB(122, 186, 122) 		
+//#define PLAYERA		RGB(225, 150, 0) 			
+//#define PLAYERB		RGB(122, 186, 122) 		
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
@@ -62,15 +62,25 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
 /************************************************************************/
 void GameField::updateGameField_pl_nc(){
 	lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, FIELD);	//draw background
-	switch(pl_nc->getNCStatus()){
+	switch(pl_nc->getStatus()){
 	  case 0: WA->drawStanding(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
     case 1: WA->drawLeft(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
     case 2: WA->drawRight(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
     case 3: WA->drawUp(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
     case 4: WA->drawDown(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
 	}
-	//lcd->fillRect(pl_nc->getxPosPx() + OFFSETX, pl_nc->getyPosPx() + OFFSETY, SIZE, SIZE, PLAYERA);		//draw player
 	pl_nc->updatePos();		//update player so the old position is the current position
 }
 
+void GameField::updateGameField_pl_ir(){
+  lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, FIELD); //draw background
+  switch(pl_ir->getStatus()){
+    case 0: WA->drawStanding(pl_ir->getxPosPx()+6 + OFFSETX, pl_ir->getyPosPx()+4 + OFFSETY, 2); break;
+    case 1: WA->drawLeft(pl_ir->getxPosPx()+6 + OFFSETX, pl_ir->getyPosPx()+4 + OFFSETY, 2); break;
+    case 2: WA->drawRight(pl_ir->getxPosPx()+6 + OFFSETX, pl_ir->getyPosPx()+4 + OFFSETY, 2); break;
+    case 3: WA->drawUp(pl_ir->getxPosPx()+6 + OFFSETX, pl_ir->getyPosPx()+4 + OFFSETY, 2); break;
+    case 4: WA->drawDown(pl_ir->getxPosPx()+6 + OFFSETX, pl_ir->getyPosPx()+4 + OFFSETY, 2); break;
+  }
+  pl_ir->updatePos();   //update player so the old position is the current position
+}
 
