@@ -16,7 +16,9 @@
 #define WHITE2  RGB(220, 220, 220)  //11
 #define BLUE1   RGB(128, 160, 192)  //12
 #define BLUE2   RGB(64, 96, 128)    //13
-//#define DEBUG
+#define RED1    RGB(232, 56, 64)
+#define RED2    RGB(176, 16, 24)
+#define RED3    RGB(128, 0, 0)
 
 uint8_t Down[8][12] = {
       {0,0,0, 1, 4,3,4, 4, 1,0,0,0}, 
@@ -104,7 +106,7 @@ WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g, int x, int y){
   mirrorBottom = 0;
   leg = 0;
   lcd = lcd_g;
-  drawStanding(x, y);
+  drawStanding(x, y, 1);
 }
 
 //leg is the feet that is in the air, 0 is right and 1 is left.
@@ -130,51 +132,99 @@ void WalkingAnimation::drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mi
 }
 
 void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
-	for(int i = 0; i < 8; i++){
-		for(int p = 0; p < 12; p++){
-			switch(part[i][p]){
-				case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
-				case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
-				case 2: lcd->drawPixel((p+x), (i+y), GREEN1);  break;
-				case 3: lcd->drawPixel((p+x), (i+y), GREEN2);  break;
-				case 4: lcd->drawPixel((p+x), (i+y), GREEN3);  break;
-				case 5: lcd->drawPixel((p+x), (i+y), BROWN1);  break;
-				case 6: lcd->drawPixel((p+x), (i+y), BROWN2);  break;
-				case 7: lcd->drawPixel((p+x), (i+y), BROWN3);  break;
-				case 8: lcd->drawPixel((p+x), (i+y), YELLOW1); break;
-				case 9: lcd->drawPixel((p+x), (i+y), YELLOW2); break;
-				case 10:lcd->drawPixel((p+x), (i+y), WHITE1);  break;
-				case 11:lcd->drawPixel((p+x), (i+y), WHITE2);  break;
-				case 13:lcd->drawPixel((p+x), (i+y), BLUE1);   break;
-				case 14:lcd->drawPixel((p+x), (i+y), BLUE2);   break;
-			}
-		}
-  } 
+  if(player==1){
+    for(int i = 0; i < 8; i++){
+  		for(int p = 0; p < 12; p++){
+        switch(part[i][p]){
+  				case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
+  				case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+  				case 2: lcd->drawPixel((p+x), (i+y), GREEN1);  break;
+  				case 3: lcd->drawPixel((p+x), (i+y), GREEN2);  break;
+  				case 4: lcd->drawPixel((p+x), (i+y), GREEN3);  break;
+  				case 5: lcd->drawPixel((p+x), (i+y), BROWN1);  break;
+  				case 6: lcd->drawPixel((p+x), (i+y), BROWN2);  break;
+  				case 7: lcd->drawPixel((p+x), (i+y), BROWN3);  break;
+  				case 8: lcd->drawPixel((p+x), (i+y), YELLOW1); break;
+  				case 9: lcd->drawPixel((p+x), (i+y), YELLOW2); break;
+  				case 10:lcd->drawPixel((p+x), (i+y), WHITE1);  break;
+  				case 11:lcd->drawPixel((p+x), (i+y), WHITE2);  break;
+  				case 13:lcd->drawPixel((p+x), (i+y), BLUE1);   break;
+  				case 14:lcd->drawPixel((p+x), (i+y), BLUE2);   break;
+  			}
+  		}
+    } 
+  } else if(player==2){
+    for(int i = 0; i < 8; i++){
+      for(int p = 0; p < 12; p++){
+        switch(part[i][p]){
+          case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
+          case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+          case 2: lcd->drawPixel((p+x), (i+y), RED1);  break;
+          case 3: lcd->drawPixel((p+x), (i+y), RED2);  break;
+          case 4: lcd->drawPixel((p+x), (i+y), RED3);  break;
+          case 5: lcd->drawPixel((p+x), (i+y), BROWN1);  break;
+          case 6: lcd->drawPixel((p+x), (i+y), BROWN2);  break;
+          case 7: lcd->drawPixel((p+x), (i+y), BROWN3);  break;
+          case 8: lcd->drawPixel((p+x), (i+y), YELLOW1); break;
+          case 9: lcd->drawPixel((p+x), (i+y), YELLOW2); break;
+          case 10:lcd->drawPixel((p+x), (i+y), WHITE1);  break;
+          case 11:lcd->drawPixel((p+x), (i+y), WHITE2);  break;
+          case 13:lcd->drawPixel((p+x), (i+y), BLUE1);   break;
+          case 14:lcd->drawPixel((p+x), (i+y), BLUE2);   break;
+        }
+      }
+    } 
+  }
 }
 
 void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
-	for(uint8_t i = 0; i < 8; i++){
-		uint8_t s = 0;
-		for(uint8_t p = 11; p < 255; p--){
-			switch(part[i][p]){
-				case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
-				case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
-				case 2: lcd->drawPixel((s+x), (i+y), GREEN1);  break;
-				case 3: lcd->drawPixel((s+x), (i+y), GREEN2);  break;
-				case 4: lcd->drawPixel((s+x), (i+y), GREEN3);  break;
-				case 5: lcd->drawPixel((s+x), (i+y), BROWN1);  break;
-				case 6: lcd->drawPixel((s+x), (i+y), BROWN2);  break;
-				case 7: lcd->drawPixel((s+x), (i+y), BROWN3);  break;
-				case 8: lcd->drawPixel((s+x), (i+y), YELLOW1); break;
-				case 9: lcd->drawPixel((s+x), (i+y), YELLOW2); break;
-				case 10:lcd->drawPixel((s+x), (i+y), WHITE1);  break;
-				case 11:lcd->drawPixel((s+x), (i+y), WHITE2);  break;
-				case 13:lcd->drawPixel((s+x), (i+y), BLUE1);   break;
-				case 14:lcd->drawPixel((s+x), (i+y), BLUE2);   break;
-			}
-			s++;
-		}
-	}
+  if(player==1){
+  	for(uint8_t i = 0; i < 8; i++){
+  		uint8_t s = 0;
+  		for(uint8_t p = 11; p < 255; p--){
+  			switch(part[i][p]){
+  				case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
+  				case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+  				case 2: lcd->drawPixel((s+x), (i+y), GREEN1);  break;
+  				case 3: lcd->drawPixel((s+x), (i+y), GREEN2);  break;
+  				case 4: lcd->drawPixel((s+x), (i+y), GREEN3);  break;
+  				case 5: lcd->drawPixel((s+x), (i+y), BROWN1);  break;
+  				case 6: lcd->drawPixel((s+x), (i+y), BROWN2);  break;
+  				case 7: lcd->drawPixel((s+x), (i+y), BROWN3);  break;
+  				case 8: lcd->drawPixel((s+x), (i+y), YELLOW1); break;
+  				case 9: lcd->drawPixel((s+x), (i+y), YELLOW2); break;
+  				case 10:lcd->drawPixel((s+x), (i+y), WHITE1);  break;
+  				case 11:lcd->drawPixel((s+x), (i+y), WHITE2);  break;
+  				case 13:lcd->drawPixel((s+x), (i+y), BLUE1);   break;
+  				case 14:lcd->drawPixel((s+x), (i+y), BLUE2);   break;
+  			}
+  			s++;
+  		}
+  	}
+  } else if(player==2){
+    for(uint8_t i = 0; i < 8; i++){
+      uint8_t s = 0;
+      for(uint8_t p = 11; p < 255; p--){
+        switch(part[i][p]){
+          case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
+          case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+          case 2: lcd->drawPixel((s+x), (i+y), RED1);  break;
+          case 3: lcd->drawPixel((s+x), (i+y), RED2);  break;
+          case 4: lcd->drawPixel((s+x), (i+y), RED3);  break;
+          case 5: lcd->drawPixel((s+x), (i+y), BROWN1);  break;
+          case 6: lcd->drawPixel((s+x), (i+y), BROWN2);  break;
+          case 7: lcd->drawPixel((s+x), (i+y), BROWN3);  break;
+          case 8: lcd->drawPixel((s+x), (i+y), YELLOW1); break;
+          case 9: lcd->drawPixel((s+x), (i+y), YELLOW2); break;
+          case 10:lcd->drawPixel((s+x), (i+y), WHITE1);  break;
+          case 11:lcd->drawPixel((s+x), (i+y), WHITE2);  break;
+          case 13:lcd->drawPixel((s+x), (i+y), BLUE1);   break;
+          case 14:lcd->drawPixel((s+x), (i+y), BLUE2);   break;
+        }
+        s++;
+      }
+    }
+  }
 }
 void WalkingAnimation::mirrorAll(){
   if(mirrorTop){
@@ -189,18 +239,21 @@ void WalkingAnimation::mirrorAll(){
   }
 }
 
-void WalkingAnimation::drawUp(int x, int y){
+void WalkingAnimation::drawUp(int x, int y, uint8_t selectPlayer){
+  player = selectPlayer;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Up, UpWalking);
   mirrorAll();
 }
 
-void WalkingAnimation::drawDown(int x, int y){
+void WalkingAnimation::drawDown(int x, int y, uint8_t selectPlayer){
+  player = selectPlayer;
   mirrorTop = 1;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Down, DownWalking);
   mirrorAll();
 }
 
-void WalkingAnimation::drawRight(int x, int y){
+void WalkingAnimation::drawRight(int x, int y, uint8_t selectPlayer){
+  player = selectPlayer;
   mirrorTop = 0;
   mirrorBottom = 0;
   if(leg){
@@ -212,7 +265,8 @@ void WalkingAnimation::drawRight(int x, int y){
   }
 }
 
-void WalkingAnimation::drawLeft(int x, int y){
+void WalkingAnimation::drawLeft(int x, int y, uint8_t selectPlayer){
+  player = selectPlayer;
   mirrorTop = 1;
   mirrorBottom = 1;
   if(leg){
@@ -224,7 +278,8 @@ void WalkingAnimation::drawLeft(int x, int y){
   }
 }
 
-void WalkingAnimation::drawStanding(int x, int y){
+void WalkingAnimation::drawStanding(int x, int y, uint8_t selectPlayer){
+  player = selectPlayer;
   mirrorTop = 0;
   mirrorBottom = 0;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Down, DownStanding);

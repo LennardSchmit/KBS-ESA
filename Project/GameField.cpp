@@ -41,13 +41,13 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
 
 			  case 3:			//player (Nunchuck)
 			  WA = new WalkingAnimation(lcd, leftcornerX + 6, leftcornerY + 4);
-			  //lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERA);
 			  pl_nc->setPosition(x, y);			//update player position so it is able to move
 			  mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
 			  break;
 
 			  case 4:			//player (received by IRCOM)
-			  lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERB);
+        WA->drawStanding(leftcornerX + 6, leftcornerY + 4, 2);
+			  //lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, PLAYERB);
 			  mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
 			  break;
 		  }
@@ -63,11 +63,11 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, Player* pl_nc_g){
 void GameField::updateGameField_pl_nc(){
 	lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, FIELD);	//draw background
 	switch(pl_nc->getNCStatus()){
-	  case 0: WA->drawStanding(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
-    case 1: WA->drawLeft(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
-    case 2: WA->drawRight(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
-    case 3: WA->drawUp(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
-    case 4: WA->drawDown(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY); break;
+	  case 0: WA->drawStanding(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
+    case 1: WA->drawLeft(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
+    case 2: WA->drawRight(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
+    case 3: WA->drawUp(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
+    case 4: WA->drawDown(pl_nc->getxPosPx()+6 + OFFSETX, pl_nc->getyPosPx()+4 + OFFSETY, 1); break;
 	}
 	//lcd->fillRect(pl_nc->getxPosPx() + OFFSETX, pl_nc->getyPosPx() + OFFSETY, SIZE, SIZE, PLAYERA);		//draw player
 	pl_nc->updatePos();		//update player so the old position is the current position

@@ -9,11 +9,11 @@ class WalkingAnimation {
 		void drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]);
 	  void drawPart(int x, int y, uint8_t part[8][12]);
     void drawMirrorPart(int x, int y, uint8_t part[8][12]);
-	  void drawUp(int x, int y);
-	  void drawDown(int x, int y);
-    void drawRight(int x, int y);
-    void drawLeft(int x, int y);
-    void drawStanding(int x, int y);
+	  void drawUp(int x, int y, uint8_t selectPlayer);
+	  void drawDown(int x, int y, uint8_t selectPlayer);
+    void drawRight(int x, int y, uint8_t selectPlayer);
+    void drawLeft(int x, int y, uint8_t selectPlayer);
+    void drawStanding(int x, int y, uint8_t selectPlayer);
     void mirrorAll();
 	
 	private:
@@ -21,6 +21,7 @@ class WalkingAnimation {
   	uint8_t mirrorTop;
   	uint8_t mirrorBottom;
   	uint8_t leg;
+    uint8_t player;
 };
 
 #endif
