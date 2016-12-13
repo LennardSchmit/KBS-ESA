@@ -45,7 +45,6 @@ uint8_t level2[9][11] = {
 Map* MP;
 MI0283QT9* lcd;
 NunchukLibrary* NC;
-//Player* playerNC;
 GameField* gameField;
 
 //volatile uint8_t timer2_counter;    //DIT IS DE TIMER
