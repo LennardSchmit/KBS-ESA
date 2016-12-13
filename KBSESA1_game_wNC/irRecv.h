@@ -16,27 +16,30 @@ class irRecv
 		uint8_t getCount();
 		void setCount(int);
 		void toBuff(int);
-		uint8_t fromBuff();
+		int fromBuff();
 		bool buffAvail();
 		void setBitTime(int);
 		void setRc(int);
-		void setStartStop(int);
+		void setStart(int);
+		void setStop(int);
 		void setRcByte(int);
 		uint8_t getBitTime();
 		uint8_t getRc();
-		uint8_t getStartStop();
-		uint8_t getRcByte();
+		uint8_t getStart();
+		uint8_t getStop();
+		int getRcByte();
 		void resetRcByte();
 
 	private:
 		uint8_t count;
 		uint8_t toIndex = 0;
 		uint8_t fromIndex = 0;
-		uint8_t *buffer[BUFFER_LENGTH]; 
+		int *buffer[BUFFER_LENGTH]; 
 		uint8_t bitTime; //Tijd tussen de pulsen
 		uint8_t rc = 0; //het aantal onvangen bits (enen en nullen)
-		uint8_t startStop = 0; //Wanneer het startsignaal is ontvangen hoogt deze op
-		uint8_t rcByte = 0; //De ontvangen byte
+		uint8_t start = 0;
+		uint8_t stop = 0;
+		int rcByte = 0; //De ontvangen byte
 };
 
 #endif

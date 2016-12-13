@@ -21,9 +21,9 @@ void irSend::sendByte(int bytes_g)
 	DDRD &= ~(1 << PORTD3);
 
 	//De byte
-	for(int i = 0; i<8; i++)
+	for(int i = 0; i<12; i++)
 	{
-		_delay_us(400);			
+		_delay_us(350);			
 		if(bytes & (1 << i))
 		{
 			DDRD |= (1 << PORTD3);
@@ -32,17 +32,15 @@ void irSend::sendByte(int bytes_g)
 		else
 		{
 			DDRD |= (1 << PORTD3);
-			_delay_us(250);
-		}
-			
+			_delay_us(350);
+		}			
 		DDRD &= ~(1 << PORTD3);
 	}
 
 	//Stop bit
-	// Start bits
-	_delay_us(400);
+	_delay_us(350);
 	DDRD |= (1 << PORTD3);
-	_delay_us(900);
+	_delay_us(1200);
 	DDRD &= ~(1 << PORTD3);
-	_delay_us(400);
+	_delay_us(350);
 }

@@ -26,7 +26,7 @@ void irRecv::toBuff(int inByte)
 	if(toIndex == BUFFER_LENGTH) toIndex--;
 }
 
-uint8_t irRecv::fromBuff()
+int irRecv::fromBuff()
 {
 	uint8_t index = fromIndex;
 	if(fromIndex < toIndex) fromIndex++;
@@ -54,9 +54,14 @@ void irRecv::setRc(int setRc)
 	rc = setRc;
 }
 
-void irRecv::setStartStop(int setSS)
+void irRecv::setStart(int setS)
 {
-	startStop = setSS;
+	start = setS;
+}
+
+void irRecv::setStop(int setS)
+{
+	stop = setS;
 }
 
 void irRecv::setRcByte(int bits)
@@ -79,12 +84,17 @@ uint8_t irRecv::getRc()
 	return rc;
 }
 
-uint8_t irRecv::getStartStop()
+uint8_t irRecv::getStart()
 {
-	return startStop;
+	return start;
 }
 
-uint8_t irRecv::getRcByte()
+uint8_t irRecv::getStop()
+{
+	return stop;
+}
+
+int irRecv::getRcByte()
 {
 	return rcByte;
 }

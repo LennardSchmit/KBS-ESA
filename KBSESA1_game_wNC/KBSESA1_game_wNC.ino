@@ -2,7 +2,6 @@
 #include <SPI.h>
 #include <arduino.h>
 #include <MI0283QT9.h>
-//#include <GraphicsLib.h>
 #include "GameField.h"
 #include <Wire.h>
 #include "NunchukLibrary.h"
@@ -40,9 +39,6 @@ GameField* gameField;
 irSend *IRs = new irSend();
 irRecv *IRr = new irRecv();
 
-volatile uint8_t timer2_counter;    //DIT IS DE TIMER
-char tmp[128];
-
 ISR(TIMER2_COMPB_vect)
 {
 	IRr->setCount(IRr->getCount()+1); //Verhoog de count variabele in de klasse irRecv. Hier wordt a mee berekend.
@@ -53,9 +49,9 @@ ISR (INT0_vect)
 	if(PIND & (1 << PIND2))
 	{
 		IRr->setBitTime(IRr->getCount());
-		if(IRr->getStartStop() == 1)
+		if(IRr->getStart() == 1 && IRr->getStop() == 0)
 		{
-			if((IRr->getBitTime() >=25) && (IRr->getBitTime() <= 35))
+			if((IRr->getBitTime() >=20) && (IRr->getBitTime() <= 30))
 			{
 				IRr->setRcByte(1 << IRr->getRc());
 			}
@@ -63,17 +59,18 @@ ISR (INT0_vect)
 		}
 		else
 		{
-			IRr->setStartStop(0);
+			IRr->setStop(0);
+			IRr->setStart(0);
 			IRr->setRc(0);
 			IRr->toBuff(IRr->getRcByte());
 			IRr->resetRcByte();
 		}
-
-		if((IRr->getBitTime() >=38) && (IRr->getBitTime() <= 48)) IRr->setStartStop((IRr->getStartStop() + 1));
-	}
+		if((IRr->getBitTime() >=34) && (IRr->getBitTime() <= 44)) IRr->setStart((IRr->getStart() + 1));
+		if((IRr->getBitTime() >=47) && (IRr->getBitTime() <= 57)) IRr->setStop((IRr->getStop() + 1));	
+	}	
 	else
 	{
-		IRr->setCount(0); //Wanner het signaal op pin 2 hoog is wordt de counter op 0 gezet.
+		IRr->setCount(0); //Wanneer het signaal op pin 2 hoog is wordt de counter op 0 gezet.
 	}
 }
 
@@ -83,9 +80,9 @@ int main(void){
 	MP = new Map(level1);
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
-	Serial.begin(9600);
 	lcd->begin();
 	Touch touch(lcd);
+	Serial.begin(9600);
 	
 	IRs->sendByte(255);
 	while(1)
@@ -95,7 +92,6 @@ int main(void){
 			Menu* menu = new Menu(lcd);
 			while(1)
 			{
-				_delay_ms(10);
 				menu->Update();
 				if(menu->getStatus() != 0)
 				{
@@ -133,7 +129,6 @@ int main(void){
 			}
 			delete optMenu;
 		}
-	
 	}
 }
 
