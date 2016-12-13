@@ -1,6 +1,6 @@
 #ifndef NunchukLibrary_h
 #define NunchukLibrary_h
-
+#include "Arduino.h"
 class NunchukLibrary {
 public:
     NunchukLibrary();
