@@ -12,7 +12,6 @@ class OptionMenu
   	OptionMenu(MI0283QT9 *lcd_g);
   	void Update();
   	uint8_t getStatus();
-    uint8_t getSelectedLevel();
     
 	private:
   	//------Game Options------//
@@ -23,7 +22,7 @@ class OptionMenu
   		"Level Select"
   	};
   	//-----Startup Default----//
-  	uint8_t option[4] = {
+  	int option[4] = {
   		9, //Brightness
   		5, //GameSpeed
   		7,  //Bomb Density
