@@ -1,19 +1,16 @@
-#include "Player_IR.h"
+#include "Player_NC.h"
 #include <digitalWriteFast.h>
 #include <SPI.h>
 #include <arduino.h>
 #include <MI0283QT9.h>
-//#include <GraphicsLib.h>
+#include <GraphicsLib.h>
 #include "GameField.h"
 #include <Wire.h>
 #include "NunchukLibrary.h"
-#include "Player_NC.h"
+#include "Player.h"
 #include "Menu.h"
 #include "OptionMenu.h"
 #include "Touch.h"
-#include "irRecv.h"
-#include "irSend.h"
-
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
@@ -22,71 +19,45 @@
 uint8_t gameStatus = 0;
 
 uint8_t level1[9][11] ={
-	{3,0,0,0,0,0,0,0,0,0,0},
-	{0,1,2,1,0,1,2,1,0,1,0},
-	{0,0,2,0,0,0,2,0,0,0,0},
-	{0,1,2,1,0,1,2,1,2,1,0},
-	{0,0,2,0,0,2,2,0,0,0,0},
-	{0,1,2,1,2,1,0,1,2,1,0},
-	{0,0,0,2,2,0,0,0,2,0,2},
-	{0,1,0,1,0,1,0,1,2,1,0},
-	{0,0,0,0,0,0,0,0,0,0,4}
-};
+  {3,0,0,0,0,0,0,0,0,0,0},
+  {0,1,2,1,0,1,2,1,0,1,0},
+  {0,0,2,0,0,0,2,0,0,0,0},
+  {0,1,2,1,0,1,2,1,2,1,0},
+  {0,0,2,0,0,2,2,0,0,0,0},
+  {0,1,2,1,2,1,0,1,2,1,0},
+  {0,0,0,2,2,0,0,0,2,0,2},
+  {0,1,0,1,0,1,0,1,2,1,0},
+  {0,0,0,0,0,0,0,0,0,0,4}
+  };
+
+uint8_t level2[9][11] = {
+  {3,0,2,2,0,0,0,0,0,2,0},
+  {0,1,2,1,0,1,2,1,0,1,2},
+  {0,0,0,0,0,0,2,2,0,0,0},
+  {0,1,2,1,2,1,2,1,2,1,0},
+  {0,0,2,2,0,2,2,2,0,0,0},
+  {0,1,2,1,2,1,2,1,0,1,2},
+  {0,0,0,2,2,2,0,0,0,2,2},
+  {0,1,2,1,2,1,0,1,2,1,2},
+  {0,0,0,0,0,0,0,0,0,0,4}
+  };
 
 Map* MP;
 MI0283QT9* lcd;
 NunchukLibrary* NC;
 GameField* gameField;
-irSend *IRs = new irSend();
-irRecv *IRr = new irRecv();
 
 //volatile uint8_t timer2_counter;    //DIT IS DE TIMER
 //char tmp[128];
-
-ISR(TIMER2_COMPB_vect)
-{
-	IRr->setCount(IRr->getCount()+1); //Verhoog de count variabele in de klasse irRecv. Hier wordt a mee berekend.
-}
-
-ISR (INT0_vect)
-{
-	if(PIND & (1 << PIND2))
-	{
-		IRr->setBitTime(IRr->getCount());
-		if(IRr->getStart() == 1 && IRr->getStop() == 0)
-		{
-			if((IRr->getBitTime() >=20) && (IRr->getBitTime() <= 30))
-			{
-				IRr->setRcByte(1 << IRr->getRc());
-			}
-			IRr->setRc((IRr->getRc() + 1));
-		}
-		else
-		{
-			IRr->setStop(0);
-			IRr->setStart(0);
-			IRr->setRc(0);
-			IRr->toBuff(IRr->getRcByte());
-			IRr->resetRcByte();
-		}
-		if((IRr->getBitTime() >=34) && (IRr->getBitTime() <= 44)) IRr->setStart((IRr->getStart() + 1));
-		if((IRr->getBitTime() >=47) && (IRr->getBitTime() <= 57)) IRr->setStop((IRr->getStop() + 1));
-	}
-	else
-	{
-		IRr->setCount(0); //Wanneer het signaal op pin 2 hoog is wordt de counter op 0 gezet.
-	}
-}
+uint8_t levelSelect = 1;
 
 int main(void){
-	IRs->sendByte(255);
-	init();
-	MP = new Map(level1);
+ 	init();
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
-	lcd->begin();
-	Touch touch(lcd);
-	IRs->sendByte(255);
+  lcd->begin();
+  Touch touch(lcd);
+	
 	while(1)
 	{
 		if(gameStatus == 0)
@@ -94,7 +65,6 @@ int main(void){
 			Menu* menu = new Menu(lcd);
 			while(1)
 			{
-				_delay_ms(10);
 				menu->Update();
 				if(menu->getStatus() != 0)
 				{
@@ -104,20 +74,20 @@ int main(void){
 			}
 			delete menu;
 		}
-		
+				
 		if(gameStatus == 1)
 		{
-			Player* playerNC = new Player_NC(MP, NC, IRs);
-			Player* playerIR = new Player_IR(MP, IRr);
-			gameField = new GameField(lcd, MP, playerNC, playerIR);
-
-			while(1){
+      SelectLevel();
+			Player* playerNC = new Player_NC(MP, NC);
+			gameField = new GameField(lcd, MP, playerNC);
+			while(1)
+			{
 				NC->ANupdate();
 				if(playerNC->updatePlayer()){
 					gameField->updateGameField_pl_nc();
 				}
 			}
-			return 0;
+			return 0;	
 		}
 
 		if(gameStatus == 2)
@@ -132,9 +102,26 @@ int main(void){
 					break;
 				}
 			}
+      levelSelect = optMenu->getSelectedLevel();
 			delete optMenu;
 		}
-		
 	}
+}
+
+/*
+ISR(TIMER2_COMPA_vect)        // interrupt service routine
+{
+	TCNT2 = timer2_counter;   // preload timer
+	cursorMovement();         //Update the location of the player at a certain interfall
+}
+*/
+
+void SelectLevel(){
+  //levelSelect = getSelectedLevel()
+  switch(levelSelect){
+    case 1:    MP = new Map(level1); break;
+    case 2:    MP = new Map(level2); break;
+    default:   MP = new Map(level1); break;
+  }
 }
 
