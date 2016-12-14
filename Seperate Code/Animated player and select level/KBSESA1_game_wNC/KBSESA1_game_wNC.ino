@@ -11,10 +11,13 @@
 #include "Menu.h"
 #include "OptionMenu.h"
 #include "Touch.h"
+
+
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
+
 
 uint8_t gameStatus = 0;
 
@@ -40,7 +43,7 @@ uint8_t level2[9][11] = {
   {0,0,0,2,2,2,0,0,0,2,2},
   {0,1,2,1,2,1,0,1,2,1,2},
   {0,0,0,0,0,0,0,0,0,0,4}
-  };
+};
 
 Map* MP;
 MI0283QT9* lcd;
