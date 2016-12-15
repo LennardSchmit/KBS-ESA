@@ -9,12 +9,15 @@
 Player_IR::~Player_IR(){}
 
 bool Player_IR::updatePlayer(){
+	/*
+	ir communication maybe useful but this updatePlayer can be changed
+	
 	bool error = true;
 	uint8_t statusRec = IRR->fromBuff();
 	status = ((statusRec & ((1 << 6)|(1 << 5)))>>5);
 	if(!status)
 		status = 4;
-
+		*/
 		
 	switch (status)							//switches to the direction the nunchuck is positioned options are left - right - up - down
 	{
