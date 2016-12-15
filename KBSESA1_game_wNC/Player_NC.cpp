@@ -7,7 +7,7 @@
 
 
 #define SIZE 24				//is the size of one block
-#define STEPOFFSET 2
+#define STEPOFFSET 2		//is the number of blocks that the player can be offset of an possible walking direction to correct the nunchuk movement
 
 #include "Player_NC.h"
 
@@ -16,11 +16,11 @@ Player_NC::~Player_NC(){}
 bool Player_NC::updatePlayer(){
 	bool returnbool = false;
 	status = NC->getStatus();
-	switch (NC->getStatus())							//switches to the direction the nunchuck is positioned options are left - right - up - down
+	switch (NC->getStatus())							//switches to the direction the nunchuk is positioned options are left - right - up - down
 	{
 
 		case 1:											//LEFT
-			if(yStep == 0){								//checks if their is an ability to move up or down because of the offset on the other axis
+			if(yStep == 0){								//checks if their is an ability to move left or right because of the offset on the other axis
 				if((xStep == 0)){						//checks if the player is entering a new block 
 					if(!((MP->getFieldValue(xPos - 1, yPos) == 1) || (MP->getFieldValue(xPos - 1, yPos) == 2))){		//checks if the block where the player is moving to can be entered
 						if(xPos > 0){					//checks if player is not moving out of the field
@@ -33,23 +33,23 @@ bool Player_NC::updatePlayer(){
 					xStep -= stepsize;					//updates step (position)
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			} else if(yStep <= stepsize * STEPOFFSET){
-        yStep -= stepsize;
-        returnbool = true; 
-        status = 3; 
-      } else if(SIZE - yStep <= stepsize * STEPOFFSET){
-        yStep += stepsize;
-        if(yStep == SIZE){
-          yPos++;
-          yStep = 0;
-        }
-        returnbool = true;  
-        status = 4;
-      }
+			} else if(yStep <= stepsize * STEPOFFSET){				//checks if the player is a little bit beneath an absolute position
+				yStep -= stepsize;
+				returnbool = true; 
+				status = 3;											//update status for communication
+			} else if(SIZE - yStep <= stepsize * STEPOFFSET){		//checks if the player is a little bit above an absolute position
+				yStep += stepsize;									//update step
+				if(yStep == SIZE){									//checks if player is entering new block
+					yPos++;											//update position
+					yStep = 0;										
+				}
+				returnbool = true;  
+				status = 4;											//update status for communication
+			}
 		break;
 
 		case 2:											//RIGHT
-			if(yStep == 0){								//checks if their is an ability to move up or down because of the offset on the other axis
+			if(yStep == 0){								//checks if their is an ability to move left or right because of the offset on the other axis
 				if((xStep == 0)){						//checks if the player is entering a new block 
 					if(!((MP->getFieldValue(xPos + 1, yPos) == 1) || (MP->getFieldValue(xPos + 1, yPos) == 2))){		//checks if the block where the player is moving to can be entered
 						xStep += stepsize;				//updates step (position)
@@ -63,52 +63,52 @@ bool Player_NC::updatePlayer(){
 					}
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			} else if(yStep <= stepsize * STEPOFFSET){
-        yStep -= stepsize;
-        returnbool = true;
-        status = 3;
-      } else if(SIZE - yStep <= stepsize * STEPOFFSET){
-        yStep += stepsize;
-        if(yStep == SIZE){
-          yPos++;
-          yStep = 0;
-        }
-        returnbool = true;
-        status = 4;
-      }
+			} else if(yStep <= stepsize * STEPOFFSET){				//checks if the player is a little bit beneath an absolute position
+				yStep -= stepsize;									//update step
+				returnbool = true;
+				status = 3;											//update status for communication
+			} else if(SIZE - yStep <= stepsize * STEPOFFSET){		//checks if the player is a little bit above an absolute position
+				yStep += stepsize;									//update step
+				if(yStep == SIZE){									//checks if player is entering new block
+					yPos++;											//update position
+					yStep = 0;
+				}
+				returnbool = true;
+				status = 4;											//update status for communication
+			}
 		break;
 
-		case 3:											//UP
-			if((xStep == 0)){							//checks if their is an ability to move up or down because of the offset on the other axis
-				if(yStep == 0){							//checks if the player is entering a new block 
+		case 3:														//UP
+			if((xStep == 0)){										//checks if their is an ability to move up or down because of the offset on the other axis
+				if(yStep == 0){										//checks if the player is entering a new block 
 					if(!((MP->getFieldValue(xPos, yPos - 1) == 1) || (MP->getFieldValue(xPos, yPos - 1) == 2))){		//checks if the block where the player is moving to can be entered
 						if(yPos > 0){
-							yPos--;						//update position
+							yPos--;									//update position
 							yStep = SIZE - stepsize;
-							returnbool = true;			//makes sure updatePlayer can give feedback to main about movement
+							returnbool = true;						//makes sure updatePlayer can give feedback to main about movement
 						}
 					}
 				} else {
-					yStep -= stepsize;					//updates step (position)
-					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
+					yStep -= stepsize;								//updates step (position)
+					returnbool = true;								//makes sure updatePlayer can give feedback to main about movement
 				}
-			} else if(xStep <= stepsize * STEPOFFSET){
-       xStep -= stepsize;
-        returnbool = true;
-        status = 1;
-      } else if(SIZE - xStep <= stepsize * STEPOFFSET){
-        xStep += stepsize;
-        if(xStep == SIZE){
-          xPos++;
-          xStep = 0;
-        }
-        returnbool = true;
-        status = 2;
-      }
+			} else if(xStep <= stepsize * STEPOFFSET){				//checks if player is a little bit on the left of an absolute position
+				xStep -= stepsize;									//update step
+				returnbool = true;
+				status = 1;											//update status for communication
+			} else if(SIZE - xStep <= stepsize * STEPOFFSET)		//checks if player is a little bit on the right of an absolute block
+				xStep += stepsize;									//update step
+				if(xStep == SIZE){									//checks if player is entering new block
+					xPos++;											//update position
+					xStep = 0;
+				}
+				returnbool = true;
+				status = 2;											//update status for communication
+			}
 		break;
 
 		case 4:											//DOWN			
-		  if((xStep == 0)){								//checks if their is an ability to move up or down because of the offset on the other axis
+			if((xStep == 0)){								//checks if their is an ability to move up or down because of the offset on the other axis
 				if(yStep == 0){							//checks if the player is entering a new block 
 					if(!((MP->getFieldValue(xPos, yPos + 1) == 1) || (MP->getFieldValue(xPos, yPos + 1) == 2))){		//checks if the block where the player is moving to can be entered
 						yStep += stepsize;				//updates step (position)
@@ -122,22 +122,24 @@ bool Player_NC::updatePlayer(){
 					}
 					returnbool = true;					//makes sure updatePlayer can give feedback to main about movement
 				}
-			} else if(xStep <= stepsize * STEPOFFSET){
-       xStep -= stepsize;
-        returnbool = true;
-        status = 1;
-      } else if(SIZE - xStep <= stepsize * STEPOFFSET){
-        xStep += stepsize;
-        if(xStep == SIZE){
-          xPos++;
-          xStep = 0;
-        }
-        returnbool = true;
-        status = 2;
-      }
+			} else if(xStep <= stepsize * STEPOFFSET){				//checks if player is a little bit on the left of an absolute position
+				xStep -= stepsize;									//update step
+				returnbool = true;
+				status = 1;											//update status for communication
+			} else if(SIZE - xStep <= stepsize * STEPOFFSET)		//checks if player is a little bit on the right of an absolute block
+				xStep += stepsize;									//update step
+				if(xStep == SIZE){									//checks if player is entering new block
+					xPos++;											//update position
+					xStep = 0;
+				}
+				returnbool = true;
+				status = 2;											//update status for communication
+			}
 		break;
 		
 	}
+	/**
+	Verzenden van bytes
 	uint8_t byteSend = 0;
 	if(status){
 		uint8_t sumStep = xStep + yStep;
@@ -154,5 +156,6 @@ bool Player_NC::updatePlayer(){
 		}
 		Serial.println(byteSend);
 	}
+	**/
 	return returnbool;	//is return true if the players position has been updated
 }
