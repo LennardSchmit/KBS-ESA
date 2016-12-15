@@ -20,6 +20,7 @@
 #define OFFSETY 13
 
 uint8_t gameStatus = 0;
+uint8_t levelSelect = 1;
 
 uint8_t level1[9][11] ={
 	{3,0,0,0,0,0,0,0,0,0,0},
@@ -33,15 +34,24 @@ uint8_t level1[9][11] ={
 	{0,0,0,0,0,0,0,0,0,0,4}
 };
 
+uint8_t level2[9][11] = {
+  {3,0,2,2,0,0,0,0,0,2,0},
+  {0,1,2,1,0,1,2,1,0,1,2},
+  {0,0,0,0,0,0,2,2,0,0,0},
+  {0,1,2,1,2,1,2,1,2,1,0},
+  {0,0,2,2,0,2,2,2,0,0,0},
+  {0,1,2,1,2,1,2,1,0,1,2},
+  {0,0,0,2,2,2,0,0,0,2,2},
+  {0,1,2,1,2,1,0,1,2,1,2},
+  {0,0,0,0,0,0,0,0,0,0,4}
+};
+
 Map* MP;
 MI0283QT9* lcd;
 NunchukLibrary* NC;
 GameField* gameField;
 irSend *IRs = new irSend();
 irRecv *IRr = new irRecv();
-
-//volatile uint8_t timer2_counter;    //DIT IS DE TIMER
-//char tmp[128];
 
 ISR(TIMER2_COMPB_vect)
 {
@@ -80,8 +90,8 @@ ISR (INT0_vect)
 
 int main(void){
 	IRs->sendByte(255);
-	init();
-	MP = new Map(level1);
+	//init();
+	//MP = new Map(level1);
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
 	lcd->begin();
@@ -107,6 +117,7 @@ int main(void){
 		
 		if(gameStatus == 1)
 		{
+      SelectLevel();
 			Player* playerNC = new Player_NC(MP, NC, IRs);
 			Player* playerIR = new Player_IR(MP, IRr);
 			gameField = new GameField(lcd, MP, playerNC, playerIR);
@@ -132,9 +143,19 @@ int main(void){
 					break;
 				}
 			}
+      levelSelect = optMenu->getSelectedLevel();
 			delete optMenu;
 		}
-		
 	}
 }
+
+void SelectLevel(){
+  //levelSelect = getSelectedLevel()
+  switch(levelSelect){
+    case 1:    MP = new Map(level1); break;
+    case 2:    MP = new Map(level2); break;
+    default:   MP = new Map(level1); break;
+  }
+}
+
 

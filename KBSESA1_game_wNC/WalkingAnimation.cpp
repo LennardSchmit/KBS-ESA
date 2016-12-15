@@ -20,7 +20,7 @@
 #define RED2    RGB(176, 16, 24)
 #define RED3    RGB(128, 0, 0)
 
-uint8_t Down[8][12] = {
+const PROGMEM uint8_t Down[8][12]  = {
       {0,0,0, 1, 4,3,4, 4, 1,0,0,0}, 
       {0,0,1, 3, 2,2,2, 3, 4,1,0,0},  
       {0,1,1, 6, 5,6,8, 9, 3,1,1,0}, 
@@ -30,7 +30,8 @@ uint8_t Down[8][12] = {
       {0,1,9,10,12,8,8,12,10,9,1,0},
       {0,0,1, 9, 8,8,8, 8, 9,1,0,0} 
     };
-     uint8_t DownStanding[8][12] = {
+    
+const PROGMEM uint8_t DownStanding[8][12] = {
       {0,1,3,1, 1,9,9,1, 1,4,1,0},
       {1,5,5,4, 3,1,1,4, 3,6,5,1},
       {1,9,6,1, 2,2,2,3, 1,6,9,1}, 
@@ -40,7 +41,7 @@ uint8_t Down[8][12] = {
       {0,1,5,6, 1,1,1,1, 6,5,1,0}, 
       {0,0,1,1, 1,0,0,0, 1,1,0,0}, 
     };
-     uint8_t DownWalking[8][12] = {
+const PROGMEM uint8_t DownWalking[8][12] = {
       {0,1,6,1, 1,9,9,1, 1,6,9,1},
       {0,1,5,5, 1,1,1,4, 1,6,5,1},
       {0,1,6,8, 8,1,2,3, 4,1,1,0}, 
@@ -50,7 +51,7 @@ uint8_t Down[8][12] = {
       {0,0,0,1, 1,1,1,1, 1,6,1,0}, 
       {0,0,0,0, 0,1,1,1, 1,1,0,0}, 
     };
-     uint8_t Sideway[8][12]{
+const PROGMEM uint8_t Sideway[8][12]{
       {0,0,0,1, 1,4,4,1, 1,0,0,0},
       {0,0,1,4, 3,2,2,8, 9,1,1,0},
       {0,1,2,2, 2,3,9,1, 1,5,6,1}, 
@@ -60,7 +61,7 @@ uint8_t Down[8][12] = {
       {1,4,1,9,8,7,7,10,12,8,1,1}, 
       {1,4,1,1, 9,8,7,8, 8,9,1,0}, 
     };
-     uint8_t SidewayWalking[8][12]{
+const PROGMEM uint8_t SidewayWalking[8][12]{
       {0,1,1,1, 1,1,9,9, 1,1,0,0},
       {0,1,9,1, 4,1,1,1, 1,1,1,0},
       {0,1,5,1, 3,4,6,5, 5,8,8,1}, 
@@ -70,7 +71,7 @@ uint8_t Down[8][12] = {
       {0,1,6,6, 7,1,1,1, 6,5,5,1}, 
       {0,0,1,1, 1,1,1,1, 1,1,1,0}, 
     };
-     uint8_t SidewayStanding[8][12]{
+const PROGMEM uint8_t SidewayStanding[8][12]{
       {0,1,0,0, 1,1,9,9, 1,1,0,0},
       {0,0,0,0, 1,3,1,1, 6,1,0,0},
       {0,0,0,0, 1,2,3,7, 5,1,0,0}, 
@@ -80,7 +81,7 @@ uint8_t Down[8][12] = {
       {0,0,0,0, 1,7,1,6, 5,5,1,0}, 
       {0,0,0,0, 0,1,1,1, 1,1,0,0}, 
     };
-     uint8_t Up[8][12]{
+const PROGMEM uint8_t Up[8][12]{
       {0,0,0,0, 0,1,5,6, 1,0,0,0},
       {0,0,0,1, 1,6,5,5, 6,1,0,0},
       {0,1,1,6, 8,8,8,6, 5,1,1,0}, 
@@ -90,7 +91,7 @@ uint8_t Down[8][12] = {
       {0,1,1,1, 4,3,3,2, 4,1,1,0}, 
       {0,0,1,7, 1,3,4,3, 1,1,1,0}, 
     };
-     uint8_t UpWalking[8][12]{
+const PROGMEM uint8_t UpWalking[8][12]{
       {0,1,3,1, 1,1,3,4, 1,7,9,1},
       {1,5,5,4, 3,1,4,4, 1,7,5,1},
       {1,9,5,1, 2,2,1,1, 1,1,1,0}, 
@@ -135,7 +136,7 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
   if(player==1){
     for(int i = 0; i < 8; i++){
   		for(int p = 0; p < 12; p++){
-        switch(part[i][p]){
+        switch(pgm_read_byte(&part[i][p])){
   				case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
   				case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
   				case 2: lcd->drawPixel((p+x), (i+y), GREEN1);  break;
@@ -156,7 +157,7 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
   } else if(player==2){
     for(int i = 0; i < 8; i++){
       for(int p = 0; p < 12; p++){
-        switch(part[i][p]){
+        switch(pgm_read_byte(&part[i][p])){
           case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
           case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
           case 2: lcd->drawPixel((p+x), (i+y), RED1);  break;
@@ -182,7 +183,7 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
   	for(uint8_t i = 0; i < 8; i++){
   		uint8_t s = 0;
   		for(uint8_t p = 11; p < 255; p--){
-  			switch(part[i][p]){
+  			switch(pgm_read_byte(&part[i][p])){
   				case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
   				case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
   				case 2: lcd->drawPixel((s+x), (i+y), GREEN1);  break;
@@ -205,7 +206,7 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
     for(uint8_t i = 0; i < 8; i++){
       uint8_t s = 0;
       for(uint8_t p = 11; p < 255; p--){
-        switch(part[i][p]){
+        switch(pgm_read_byte(&part[i][p])){
           case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
           case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
           case 2: lcd->drawPixel((s+x), (i+y), RED1);  break;

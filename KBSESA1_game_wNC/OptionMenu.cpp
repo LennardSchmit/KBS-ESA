@@ -130,3 +130,8 @@ uint8_t OptionMenu::getStatus()
 {
 	return status;
 }
+
+uint8_t OptionMenu::getSelectedLevel(){
+  return option[3];
+}
+

@@ -96,7 +96,7 @@ bool Player_NC::updatePlayer(){
 				xStep -= stepsize;									//update step
 				returnbool = true;
 				status = 1;											//update status for communication
-			} else if(SIZE - xStep <= stepsize * STEPOFFSET)		//checks if player is a little bit on the right of an absolute block
+			} else if(SIZE - xStep <= stepsize * STEPOFFSET){		//checks if player is a little bit on the right of an absolute block
 				xStep += stepsize;									//update step
 				if(xStep == SIZE){									//checks if player is entering new block
 					xPos++;											//update position
@@ -126,7 +126,7 @@ bool Player_NC::updatePlayer(){
 				xStep -= stepsize;									//update step
 				returnbool = true;
 				status = 1;											//update status for communication
-			} else if(SIZE - xStep <= stepsize * STEPOFFSET)		//checks if player is a little bit on the right of an absolute block
+			} else if(SIZE - xStep <= stepsize * STEPOFFSET){		//checks if player is a little bit on the right of an absolute block
 				xStep += stepsize;									//update step
 				if(xStep == SIZE){									//checks if player is entering new block
 					xPos++;											//update position
