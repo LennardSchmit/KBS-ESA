@@ -13,6 +13,7 @@
 #include "Touch.h"
 #include "irRecv.h"
 #include "irSend.h"
+#include "Timer_Display.h"
 
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
@@ -21,6 +22,8 @@
 
 uint8_t gameStatus = 0;
 uint8_t levelSelect = 1;
+uint8_t OnehzCounter = 0;
+uint8_t gameTimer = 0;
 
 uint8_t level1[9][11] ={
 	{3,0,0,0,0,0,0,0,0,0,0},
@@ -52,6 +55,7 @@ NunchukLibrary* NC;
 GameField* gameField;
 irSend *IRs = new irSend();
 irRecv *IRr = new irRecv();
+Timer_Display* timer1;
 
 ISR(TIMER2_COMPB_vect)
 {
@@ -97,6 +101,8 @@ int main(void){
 	lcd->begin();
 	Touch touch(lcd);
 	IRs->sendByte(255);
+  setTimer1();
+  
 	while(1)
 	{
 		if(gameStatus == 0)
@@ -116,17 +122,23 @@ int main(void){
 		}
 		
 		if(gameStatus == 1)
-		{
+		{ 
+      timer1 = new Timer_Display();
       SelectLevel();
 			Player* playerNC = new Player_NC(MP, NC, IRs);
 			Player* playerIR = new Player_IR(MP, IRr);
 			gameField = new GameField(lcd, MP, playerNC, playerIR);
+      
+      gameTimer = 1;
 
 			while(1){
 				NC->ANupdate();
 				if(playerNC->updatePlayer()){
 					gameField->updateGameField_pl_nc();
 				}
+        if(gameTimer = 2){
+          
+        }
 			}
 			return 0;
 		}
@@ -158,4 +170,34 @@ void SelectLevel(){
   }
 }
 
+void setTimer1()
+{
+  Serial.begin(9600);
 
+  // initialize timer1 
+  cli();           // disable all interrupts
+  TCCR1A = 0;
+  TCCR1B = 0;
+
+  TCNT1 = 65015;            // preload timer 65536-16MHz/256/2Hz
+  TCCR1B |= (1 << CS12)|(0 << CS11)|(1 << CS10);    // 256 prescaler 
+  TIMSK1 |= (1 << TOIE1);   // enable timer overflow interrupt
+  sei();             // enable all interrupts
+}
+
+ISR(TIMER1_OVF_vect)        // interrupt service routine that wraps a user defined function supplied by attachInterrupt
+{
+  TCNT1 = 65015;            // preload timer
+  OnehzCounter++;
+
+  if(OnehzCounter == 30){
+    OnehzCounter = 0;
+    Serial.println("Hai");
+    if(gameStatus = 1){
+      if(timer1->nextSecond()){
+        gameStatus = 0; //Game has Ended by the timer
+        Serial.println("NU");
+      }
+    }
+  }
+}
