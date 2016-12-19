@@ -1,8 +1,8 @@
-C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimation.cpp.o: \
- C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimation.cpp \
- C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimation.h \
- C:\Users\Rick\Documents\Arduino\libraries\MI0283QT9/MI0283QT9.h \
- C:\Users\Rick\Documents\Arduino\libraries\GraphicsLib/GraphicsLib.h \
+C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimation.cpp.o: \
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimation.cpp \
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimation.h \
+ C:\Program\ Files\ (x86)\Arduino\libraries\MI0283QT9/MI0283QT9.h \
+ C:\Program\ Files\ (x86)\Arduino\libraries\GraphicsLib/GraphicsLib.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Printable.h \
@@ -14,4 +14,5 @@ C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\WalkingAnimat
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\Color.h

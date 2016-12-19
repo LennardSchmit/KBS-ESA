@@ -1,5 +1,5 @@
-#include "arduino.h"
-#include "Wire.h"
+#include <arduino.h>
+#include <Wire.h>
 #include "NunchukLibrary.h"
 
 #define ADDRESS 0x52

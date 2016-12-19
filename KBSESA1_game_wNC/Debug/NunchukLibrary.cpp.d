@@ -1,5 +1,5 @@
-C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.cpp.o: \
- C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.cpp \
+C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.cpp.o: \
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -13,5 +13,4 @@ C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrar
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src/Wire.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
- C:\Users\Rick\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.h

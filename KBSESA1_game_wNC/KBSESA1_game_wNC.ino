@@ -1,3 +1,4 @@
+#include <Wire.h>
 #include "Player_IR.h"
 #include <SPI.h>
 #include <stdint.h>
@@ -58,7 +59,51 @@ Timer_Display* timer1;
 
 ISR(TIMER2_COMPB_vect)
 {
+	
 	IRr->setCount(IRr->getCount()+1); //Verhoog de count variabele in de klasse irRecv. Hier wordt a mee berekend.
+	IRs->setCount(IRs->getCount()+1);
+	/*
+	if(IRs->getBitSend() == 1 && IRs->getCount() == 13)
+	{
+		DDRD |= (1 << PORTD3);
+		IRs->setBitSend(0);
+	}
+
+	if(IRs->buffAvail() && IRs->getCurByte() == 0)
+	{
+		IRs->setCurByte(IRs->fromBuff());
+		DDRD |= (1 << PORTD3);
+		IRs->setCount(0);
+	}
+
+	if(IRs->getCount() == 34 && IRs->getStart == 0 && IRs->getBitSend() == 0)
+	{
+		DDRD &= ~(1 << PORTD3);
+		IRs->setCount(0);
+		IRs->setBitSend(1);
+		IRs->setStart(1);
+	}
+
+	if(IRs->getStart() && !(IRs->getBitSend() && IRs->getBitCount() < 15)
+	{
+		if(IRs->getCount() == 23 && (IRs->getCurByte()) << IRs->getBitCount()))
+		{
+			DDRD &= ~(1 << PORTD3);
+		}
+		else if(IRs->getCount() == 10)
+		{
+			DDRD &= ~(1 << PORTD3);
+		}
+		IRs->setCount(0);
+		IRs->setBitSend(1);
+		IRs->setBitCount(IRs->getBitCount() + 1);
+    }
+
+	if(IRs->getBitCount() == 15 && IRs->getBitSend() ==0)
+	{
+		
+	}
+	*/
 }
 
 ISR (INT0_vect)
@@ -92,7 +137,6 @@ ISR (INT0_vect)
 }
 
 int main(void){
-	IRs->sendByte(255);
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
   WA = new WalkingAnimation(lcd);

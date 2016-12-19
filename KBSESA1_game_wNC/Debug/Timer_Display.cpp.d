@@ -1,6 +1,5 @@
-C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\OptionMenu.cpp.o: \
- C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\OptionMenu.cpp \
- C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\OptionMenu.h \
+C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\Timer_Display.cpp.o: \
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\Timer_Display.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -12,8 +11,5 @@ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\Optio
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\MI0283QT9/MI0283QT9.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\GraphicsLib/GraphicsLib.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Print.h \
- C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\NunchukLibrary.h \
- C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\Color.h
+ C:\Users\D.Hergaarden\AppData\Local\Temp\VMicroBuilds\KBSESA1_game_wNC\uno\Timer_Display.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/arduino.h
