@@ -1,6 +1,6 @@
 #ifndef Player_h
 #define Player_h
-#include "Arduino.h"
+#include "stdint.h"
 //#include "NunchukLibrary.h"
 #include "Map.h"
 

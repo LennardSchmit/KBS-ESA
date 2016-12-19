@@ -93,7 +93,6 @@ bool Player_IR::updatePlayer(){
 		
 	}
 	if(!error){
-	Serial.println("error");
 	}
 	return error;
 	//is return true if the players position has been updated

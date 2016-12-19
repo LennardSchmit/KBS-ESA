@@ -1,8 +1,3 @@
-/*
-#include "NunchukLibrary.h"
-#include "Arduino.h"
-#include "Wire.h"
-*/
 #include "arduino.h"
 #include "Wire.h"
 #include "NunchukLibrary.h"

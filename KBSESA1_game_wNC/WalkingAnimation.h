@@ -5,7 +5,7 @@
 
 class WalkingAnimation {
 	public:
-    WalkingAnimation(MI0283QT9* lcd_g, int x, int y);
+    WalkingAnimation(MI0283QT9* lcd_g);
 		void drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]);
 	  void drawPart(int x, int y, uint8_t part[8][12]);
     void drawMirrorPart(int x, int y, uint8_t part[8][12]);
@@ -14,6 +14,8 @@ class WalkingAnimation {
     void drawRight(int x, int y, uint8_t selectPlayer);
     void drawLeft(int x, int y, uint8_t selectPlayer);
     void drawStanding(int x, int y, uint8_t selectPlayer);
+    void drawBigStanding(int x, int y, uint8_t selectPlayer);
+    void drawPartBig(int x, int y, uint8_t part[8][12]);
     void mirrorAll();
 	
 	private:

@@ -2,7 +2,7 @@
 
 #ifndef _MENU_h
 #define _MENU_h
-#include <Arduino.h>
+#include <stdint.h>
 #include <EEPROM.h>
 #include <MI0283QT9.h>
 #include "NunchukLibrary.h"

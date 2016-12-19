@@ -1,24 +1,7 @@
 #include "WalkingAnimation.h"
 #include <MI0283QT9.h>
 #include "Arduino.h"
-
-#define BACKGROUND RGB(52, 54, 65)
-#define BLACK   RGB(32, 32, 32)     //1
-#define GREEN1  RGB(96, 208, 80)    //2
-#define GREEN2  RGB(64, 152, 48)    //3
-#define GREEN3  RGB(32, 112, 16)    //4
-#define BROWN1  RGB(163, 118, 64)   //5
-#define BROWN2  RGB(124, 67, 45)    //6
-#define BROWN3  RGB(92, 48, 32)     //7
-#define YELLOW1 RGB(255, 235, 98)   //8
-#define YELLOW2 RGB(222, 164, 30)   //9
-#define WHITE1  RGB(255, 255, 255)  //10
-#define WHITE2  RGB(220, 220, 220)  //11
-#define BLUE1   RGB(128, 160, 192)  //12
-#define BLUE2   RGB(64, 96, 128)    //13
-#define RED1    RGB(232, 56, 64)
-#define RED2    RGB(176, 16, 24)
-#define RED3    RGB(128, 0, 0)
+#include "Color.h"
 
 const PROGMEM uint8_t Down[8][12]  = {
       {0,0,0, 1, 4,3,4, 4, 1,0,0,0}, 
@@ -102,17 +85,16 @@ const PROGMEM uint8_t UpWalking[8][12]{
       {0,0,0,0, 0,0,0,1, 1,1,0,0}, 
     };
     
-WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g, int x, int y){
+WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g){
   mirrorTop = 0;
   mirrorBottom = 0;
   leg = 0;
   lcd = lcd_g;
-  drawStanding(x, y, 1);
 }
 
 //leg is the feet that is in the air, 0 is right and 1 is left.
 void WalkingAnimation::drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]){
-  lcd->fillRect(x-2, y-2, 16, 20 , BACKGROUND);
+  lcd->fillRect(x-2, y-2, 16, 20 , BLACK);
   if(!mirrorTop)
   {
     drawPart(x, y, characterTop);
@@ -137,8 +119,8 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
     for(int i = 0; i < 8; i++){
   		for(int p = 0; p < 12; p++){
         switch(pgm_read_byte(&part[i][p])){
-  				case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
-  				case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+  				case 0: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+  				case 1: lcd->drawPixel((p+x), (i+y), PLAYERBLACK);   break;
   				case 2: lcd->drawPixel((p+x), (i+y), GREEN1);  break;
   				case 3: lcd->drawPixel((p+x), (i+y), GREEN2);  break;
   				case 4: lcd->drawPixel((p+x), (i+y), GREEN3);  break;
@@ -158,8 +140,8 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
     for(int i = 0; i < 8; i++){
       for(int p = 0; p < 12; p++){
         switch(pgm_read_byte(&part[i][p])){
-          case 0: lcd->drawPixel((p+x), (i+y), BACKGROUND);   break;
-          case 1: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+          case 0: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+          case 1: lcd->drawPixel((p+x), (i+y), PLAYERBLACK);   break;
           case 2: lcd->drawPixel((p+x), (i+y), RED1);  break;
           case 3: lcd->drawPixel((p+x), (i+y), RED2);  break;
           case 4: lcd->drawPixel((p+x), (i+y), RED3);  break;
@@ -184,8 +166,8 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
   		uint8_t s = 0;
   		for(uint8_t p = 11; p < 255; p--){
   			switch(pgm_read_byte(&part[i][p])){
-  				case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
-  				case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+  				case 0: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+  				case 1: lcd->drawPixel((s+x), (i+y), PLAYERBLACK);   break;
   				case 2: lcd->drawPixel((s+x), (i+y), GREEN1);  break;
   				case 3: lcd->drawPixel((s+x), (i+y), GREEN2);  break;
   				case 4: lcd->drawPixel((s+x), (i+y), GREEN3);  break;
@@ -207,8 +189,8 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
       uint8_t s = 0;
       for(uint8_t p = 11; p < 255; p--){
         switch(pgm_read_byte(&part[i][p])){
-          case 0: lcd->drawPixel((s+x), (i+y), BACKGROUND);   break;
-          case 1: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+          case 0: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+          case 1: lcd->drawPixel((s+x), (i+y), PLAYERBLACK);   break;
           case 2: lcd->drawPixel((s+x), (i+y), RED1);  break;
           case 3: lcd->drawPixel((s+x), (i+y), RED2);  break;
           case 4: lcd->drawPixel((s+x), (i+y), RED3);  break;
@@ -285,3 +267,59 @@ void WalkingAnimation::drawStanding(int x, int y, uint8_t selectPlayer){
   mirrorBottom = 0;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Down, DownStanding);
 }
+
+void WalkingAnimation::drawBigStanding(int x, int y, uint8_t selectPlayer){
+  player = selectPlayer;
+  drawPartBig(x, y, Down);
+  y+=24;
+  drawPartBig(x, y, DownStanding);
+}
+
+void WalkingAnimation::drawPartBig(int x, int y, uint8_t part[8][12]){
+  if(player==1){
+    for(int i = 0; i < 24; i+=3){
+      for(int p = 0; p < 32; p+=3){
+        switch(pgm_read_byte(&part[(i/3)][(p/3)])){
+          case 0: lcd->fillRect((p+x), (i+y), 3, 3, BLACK);  break;
+          case 1: lcd->fillRect((p+x), (i+y), 3, 3, PLAYERBLACK);   break;
+          case 2: lcd->fillRect((p+x), (i+y), 3, 3, GREEN1);  break;
+          case 3: lcd->fillRect((p+x), (i+y), 3, 3, GREEN2);  break;
+          case 4: lcd->fillRect((p+x), (i+y), 3, 3, GREEN3);  break;
+          case 5: lcd->fillRect((p+x), (i+y), 3, 3, BROWN1);  break;
+          case 6: lcd->fillRect((p+x), (i+y), 3, 3, BROWN2);  break;
+          case 7: lcd->fillRect((p+x), (i+y), 3, 3, BROWN3);  break;
+          case 8: lcd->fillRect((p+x), (i+y), 3, 3, YELLOW1); break;
+          case 9: lcd->fillRect((p+x), (i+y), 3, 3, YELLOW2); break;
+          case 10:lcd->fillRect((p+x), (i+y), 3, 3, WHITE1);  break;
+          case 11:lcd->fillRect((p+x), (i+y), 3, 3, WHITE2);  break;
+          case 13:lcd->fillRect((p+x), (i+y), 3, 3, BLUE1);   break;
+          case 14:lcd->fillRect((p+x), (i+y), 3, 3, BLUE2);   break;
+        }
+      }
+    } 
+  } 
+  
+  else if(player==2){
+    for(int i = 0; i < 24; i+=3){
+      for(int p = 0; p < 32; p+=3){
+        switch(pgm_read_byte(&part[(i/3)][(p/3)])){
+          case 0: lcd->fillRect((p+x), (i+y), 3, 3, BLACK);  break;
+          case 1: lcd->fillRect((p+x), (i+y), 3, 3, PLAYERBLACK);   break;
+          case 2: lcd->fillRect((p+x), (i+y), 3, 3, RED1);  break;
+          case 3: lcd->fillRect((p+x), (i+y), 3, 3, RED2);  break;
+          case 4: lcd->fillRect((p+x), (i+y), 3, 3, RED3);  break;
+          case 5: lcd->fillRect((p+x), (i+y), 3, 3, BROWN1);  break;
+          case 6: lcd->fillRect((p+x), (i+y), 3, 3, BROWN2);  break;
+          case 7: lcd->fillRect((p+x), (i+y), 3, 3, BROWN3);  break;
+          case 8: lcd->fillRect((p+x), (i+y), 3, 3, YELLOW1); break;
+          case 9: lcd->fillRect((p+x), (i+y), 3, 3, YELLOW2); break;
+          case 10:lcd->fillRect((p+x), (i+y), 3, 3, WHITE1);  break;
+          case 11:lcd->fillRect((p+x), (i+y), 3, 3, WHITE2);  break;
+          case 13:lcd->fillRect((p+x), (i+y), 3, 3, BLUE1);   break;
+          case 14:lcd->fillRect((p+x), (i+y), 3, 3, BLUE2);   break;
+        }
+      }
+    }
+  }
+}
+

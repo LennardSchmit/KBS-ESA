@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "arduino.h"
+#include "stdint.h"
 #include "Map.h"
 
 #define SIZE 24				//is the size of one block

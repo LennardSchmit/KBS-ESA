@@ -1,6 +1,8 @@
 #ifndef Map_h
 #define Map_h
-#include "arduino.h"
+
+#include "stdint.h"
+
 // Map is implemented because two classes cannot implement each other 
 class Map{
   public:

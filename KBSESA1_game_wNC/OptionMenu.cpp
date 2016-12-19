@@ -1,8 +1,5 @@
 #include "OptionMenu.h"
-
-#define BACKGROUND    RGB(116, 130, 143)      //this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
-#define BLACK   RGB(52, 54, 65)       //this is the color for the field you are standing on
-#define RED   RGB(194, 91, 86)    //this is the color for the block that are destroyable
+#include "Color.h"
 
 OptionMenu::OptionMenu(MI0283QT9 *lcd_g)
 {

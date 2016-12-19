@@ -20,6 +20,8 @@
 #define ARDUINO_ARCH_AVR
 
 int main(void);
+void SelectLevel();
+void setTimer1();
 
 #include "pins_arduino.h" 
 #include "arduino.h"

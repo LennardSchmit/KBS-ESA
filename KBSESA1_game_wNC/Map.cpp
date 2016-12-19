@@ -1,5 +1,5 @@
 #include "Map.h"
-#include "Arduino.h"
+#include "stdint.h"
 
 Map::Map(uint8_t level_g[9][11]){
 	for(int y = 0; y < 9; y++){

@@ -8,11 +8,13 @@ class Touch{
   public:
     Touch(MI0283QT9* lcd_g){
       lcd = lcd_g;
+      Serial.begin(9600);
       if(lcd->touchZ() || readCalData()) //calibration data in EEPROM?
       {
         lcd->touchStartCal(); //calibrate touchpanel
         writeCalData(); //write data to EEPROM
       }
+      Serial.println(sizeof(CAL_MATRIX));
     }
     
     void writeCalData(void)
@@ -26,8 +28,9 @@ class Touch{
       for(i=0; i < sizeof(CAL_MATRIX); i++)
       {
         EEPROM.write(addr++, *ptr++);
+        //Serial.println(addr + "");
       }
-    
+      
       return;
     }
     
@@ -44,6 +47,7 @@ class Touch{
         for(i=0; i < sizeof(CAL_MATRIX); i++)
         {
           *ptr++ = EEPROM.read(addr++);
+          //Serial.println(addr + "");
         }
         return 0;
       }

@@ -1,11 +1,8 @@
 #include "Player_IR.h"
-#include <digitalWriteFast.h>
 #include <SPI.h>
-#include <arduino.h>
+#include <stdint.h>
 #include <MI0283QT9.h>
-//#include <GraphicsLib.h>
 #include "GameField.h"
-#include <Wire.h>
 #include "NunchukLibrary.h"
 #include "Player_NC.h"
 #include "Menu.h"
@@ -14,6 +11,7 @@
 #include "irRecv.h"
 #include "irSend.h"
 #include "Timer_Display.h"
+#include "AfterGame.h"
 
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
@@ -53,6 +51,7 @@ Map* MP;
 MI0283QT9* lcd;
 NunchukLibrary* NC;
 GameField* gameField;
+WalkingAnimation* WA;
 irSend *IRs = new irSend();
 irRecv *IRr = new irRecv();
 Timer_Display* timer1;
@@ -94,15 +93,14 @@ ISR (INT0_vect)
 
 int main(void){
 	IRs->sendByte(255);
-	//init();
-	//MP = new Map(level1);
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
+  WA = new WalkingAnimation(lcd);
 	lcd->begin();
 	Touch touch(lcd);
 	IRs->sendByte(255);
   setTimer1();
-  
+
 	while(1)
 	{
 		if(gameStatus == 0)
@@ -127,7 +125,7 @@ int main(void){
       SelectLevel();
 			Player* playerNC = new Player_NC(MP, NC, IRs);
 			Player* playerIR = new Player_IR(MP, IRr);
-			gameField = new GameField(lcd, MP, playerNC, playerIR);
+			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);
       
       gameTimer = 1;
 
@@ -136,9 +134,6 @@ int main(void){
 				if(playerNC->updatePlayer()){
 					gameField->updateGameField_pl_nc();
 				}
-        if(gameTimer = 2){
-          
-        }
 			}
 			return 0;
 		}
@@ -158,6 +153,21 @@ int main(void){
       levelSelect = optMenu->getSelectedLevel();
 			delete optMenu;
 		}
+
+    if(gameStatus == 3){
+      AfterGame* AG = new AfterGame(lcd, WA, 1600, 1600);
+      
+      while(1)
+      {
+        AG->Update();
+        if(AG->getStatus()!=3)
+        {
+          gameStatus = AG->getStatus();
+          break;
+        }
+      }
+      delete AG;
+    }
 	}
 }
 
@@ -172,8 +182,6 @@ void SelectLevel(){
 
 void setTimer1()
 {
-  Serial.begin(9600);
-
   // initialize timer1 
   cli();           // disable all interrupts
   TCCR1A = 0;
@@ -192,11 +200,9 @@ ISR(TIMER1_OVF_vect)        // interrupt service routine that wraps a user defin
 
   if(OnehzCounter == 30){
     OnehzCounter = 0;
-    Serial.println("Hai");
-    if(gameStatus = 1){
+    if(gameStatus == 1){
       if(timer1->nextSecond()){
-        gameStatus = 0; //Game has Ended by the timer
-        Serial.println("NU");
+        gameStatus = 3; //Game has Ended by the timer
       }
     }
   }
