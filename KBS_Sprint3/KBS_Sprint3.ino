@@ -13,16 +13,20 @@
 #include "irSend.h"
 #include "Timer_Display.h"
 #include "AfterGame.h"
+#include "SaveHighScore.h"
+#include "WatchHighScore.h"
+
 
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
 
-uint8_t gameStatus = 1;
+uint8_t gameStatus = 3;
 uint8_t levelSelect = 1;
 uint8_t OnehzCounter = 0;
 uint8_t gameTimer = 0;
+int highscore;
 
 uint8_t level1[9][11] ={
 	{3,0,0,0,0,0,0,0,0,0,0},
@@ -147,15 +151,12 @@ int main(void){
 
 	while(1)
 	{
-		if(gameStatus == 0)
-		{
+		if(gameStatus == 0)	{
 			Menu* menu = new Menu(lcd);
-			while(1)
-			{
+			while(1){
 				_delay_ms(10);
 				menu->Update();
-				if(menu->getStatus() != 0)
-				{
+				if(menu->getStatus() != 0){
 					gameStatus = menu->getStatus();
 					break;
 				}
@@ -163,14 +164,12 @@ int main(void){
 			delete menu;
 		}
 		
-		if(gameStatus == 1)
-		{ 
+		if(gameStatus == 1){ 
 			timer1 = new Timer_Display();
 			SelectLevel();
 			Player* playerNC = new Player_NC(MP, 2, NC, IRs);
 			Player* playerIR = new Player_IR(MP, 2, IRr);
-			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);
-      
+			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);    
 			gameTimer = 1;
 
 			while(1){
@@ -187,14 +186,11 @@ int main(void){
 			return 0;
 		}
 
-		if(gameStatus == 2)
-		{
+		if(gameStatus == 2){
 			OptionMenu* optMenu = new OptionMenu(lcd);
-			while(1)
-			{
+			while(1){
 				optMenu->Update();
-				if(optMenu->getStatus() != 2)
-				{
+				if(optMenu->getStatus() != 2){
 					gameStatus = optMenu->getStatus();
 					break;
 				}
@@ -205,17 +201,39 @@ int main(void){
 
     if(gameStatus == 3){
       AfterGame* AG = new AfterGame(lcd, WA, 1600, 1600);
-      
-      while(1)
-      {
+      while(1){
         AG->Update();
-        if(AG->getStatus()!=3)
-        {
+        if(AG->getStatus()!=3){
           gameStatus = AG->getStatus();
           break;
         }
       }
       delete AG;
+    }
+    
+    if(gameStatus==4){
+        SaveHighScore* HS = new SaveHighScore(lcd, highscore);
+        while(1){
+          HS->Update();
+          if(HS->getStatus()!=4){
+            gameStatus = HS->getStatus();
+            break;
+          }
+        }
+        delete HS;
+    }
+
+    if(gameStatus==5){
+      WatchHighScore* WH = new WatchHighScore(lcd);
+
+      while(1){
+        WH->Update();
+        if(WH->getStatus()!=5){
+          gameStatus = WH->getStatus();
+          break;
+        }
+      }
+      delete WH;
     }
 	}
 }
