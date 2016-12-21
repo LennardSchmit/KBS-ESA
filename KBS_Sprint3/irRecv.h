@@ -29,7 +29,8 @@ class irRecv
 		uint8_t getStop();
 		int getRcByte();
 		void resetRcByte();
-
+		uint8_t getParity();
+		void setParity(int);
 	private:
 		uint8_t count;
 		uint8_t toIndex = 0;
@@ -40,6 +41,7 @@ class irRecv
 		uint8_t start = 0;
 		uint8_t stop = 0;
 		int rcByte = 0; //De ontvangen byte
+		uint8_t parity;
 };
 
 #endif

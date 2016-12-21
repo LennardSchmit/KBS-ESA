@@ -11,40 +11,6 @@ irSend::irSend()
 	//38 Khz signaal en timer
 }
 
-
-void irSend::sendByte(int bytes_g)
-{
-	bytes = bytes_g;
-	// Start bits
-	DDRD |= (1 << PORTD3);
-	_delay_us(900);
-	DDRD &= ~(1 << PORTD3);
-
-	//De byte
-	for(int i = 0; i<12; i++)
-	{
-		_delay_us(350);			
-		if(bytes & (1 << i))
-		{
-			DDRD |= (1 << PORTD3);
-			_delay_us(600);			
-		}
-		else
-		{
-			DDRD |= (1 << PORTD3);
-			_delay_us(350);
-		}			
-		DDRD &= ~(1 << PORTD3);
-	}
-
-	//Stop bit
-	_delay_us(350);
-	DDRD |= (1 << PORTD3);
-	_delay_us(1200);
-	DDRD &= ~(1 << PORTD3);
-	_delay_us(350);
-}
-
 uint8_t irSend::getCount()
 {
 	return count;
@@ -118,4 +84,14 @@ uint8_t irSend::getStart()
 void irSend::setStart(int start_g)
 {
 	start = start_g;
+}
+
+uint8_t irSend::getParity()
+{
+	return parity;
+}
+
+void irSend::setParity(int par_g)
+{
+	parity = par_g;
 }

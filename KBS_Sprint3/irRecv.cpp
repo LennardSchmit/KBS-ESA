@@ -98,3 +98,13 @@ int irRecv::getRcByte()
 {
 	return rcByte;
 }
+
+uint8_t irRecv::getParity()
+{
+	return parity;
+}
+
+void irRecv::setParity(int par_g)
+{
+	parity = par_g;
+}

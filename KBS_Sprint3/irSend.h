@@ -26,6 +26,8 @@ class irSend
 		void setBitSend(int);
 		uint8_t getStart();
 		void setStart(int);
+		uint8_t getParity();
+		void setParity(int);
 	private:
 		int bytes;
 		uint8_t count;
@@ -36,6 +38,8 @@ class irSend
 		uint8_t toIndex = 0;
 		uint8_t fromIndex = 0;
 		int *buffer[BUFFER_LENGTH];
+		uint8_t parity;
+
 };
 
 #endif

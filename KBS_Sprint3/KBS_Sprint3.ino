@@ -66,48 +66,68 @@ ISR(TIMER2_COMPB_vect)
 	
 	IRr->setCount(IRr->getCount()+1); //Verhoog de count variabele in de klasse irRecv. Hier wordt a mee berekend.
 	IRs->setCount(IRs->getCount()+1);
-	/*
+	
 	if(IRs->getBitSend() == 1 && IRs->getCount() == 13)
 	{
-		DDRD |= (1 << PORTD3);
+		if(IRs->getStart()) DDRD |= (1 << PORTD3);
 		IRs->setBitSend(0);
+		IRs->setCount(0);
 	}
 
-	if(IRs->buffAvail() && IRs->getCurByte() == 0)
+	if(IRs->buffAvail() && !(IRs->getCurByte()) && !(IRs->getBitSend()))
 	{
 		IRs->setCurByte(IRs->fromBuff());
 		DDRD |= (1 << PORTD3);
 		IRs->setCount(0);
 	}
-
-	if(IRs->getCount() == 34 && IRs->getStart == 0 && IRs->getBitSend() == 0)
+	
+	if(IRs->getCount() == 34 && !(IRs->getStart()) && IRs->getCurByte())
 	{
 		DDRD &= ~(1 << PORTD3);
 		IRs->setCount(0);
 		IRs->setBitSend(1);
 		IRs->setStart(1);
 	}
-
-	if(IRs->getStart() && !(IRs->getBitSend() && IRs->getBitCount() < 15)
+	
+	if(IRs->getStart() && !(IRs->getBitSend()) && IRs->getBitCount() < 15)
 	{
-		if(IRs->getCount() == 23 && (IRs->getCurByte()) << IRs->getBitCount()))
+		if(IRs->getCount() == 10 && !(1 & (IRs->getCurByte() >> IRs->getBitCount())))
 		{
 			DDRD &= ~(1 << PORTD3);
+			IRs->setCount(0);
+			IRs->setBitSend(1);
+			IRs->setBitCount(IRs->getBitCount() + 1);
 		}
-		else if(IRs->getCount() == 10)
-		{
-			DDRD &= ~(1 << PORTD3);
-		}
-		IRs->setCount(0);
-		IRs->setBitSend(1);
-		IRs->setBitCount(IRs->getBitCount() + 1);
-    }
-
-	if(IRs->getBitCount() == 15 && IRs->getBitSend() ==0)
-	{
 		
+		if(IRs->getCount() == 23 && (1 & (IRs->getCurByte() >> IRs->getBitCount())))
+		{
+			DDRD &= ~(1 << PORTD3);
+			IRs->setCount(0);
+			IRs->setBitSend(1);
+			IRs->setBitCount(IRs->getBitCount() + 1);
+			IRs->setParity(IRs->getParity() + 1);
+		}
 	}
-	*/
+	
+	if(IRs->getBitCount() == 15 && !(IRs->getBitSend()) && IRs->getCount() == 46)
+	{
+		DDRD &= ~(1 << PORTD3);
+		
+		IRs->setBitSend(1);
+		IRs->setCount(0);
+
+		if(!(IRs->getParity() & 1))
+		{
+			IRs->setStart(0);
+			IRs->setBitCount(0);
+			IRs->setCurByte(0);
+			IRs->setParity(0);
+		}
+		else
+		{
+			IRs->setParity(0);
+		}
+	}
 }
 
 ISR (INT0_vect)
@@ -117,22 +137,39 @@ ISR (INT0_vect)
 		IRr->setBitTime(IRr->getCount());
 		if(IRr->getStart() == 1 && IRr->getStop() == 0)
 		{
-			if((IRr->getBitTime() >=20) && (IRr->getBitTime() <= 30))
+			if((IRr->getBitTime() >=22) && (IRr->getBitTime() <= 25))
 			{
 				IRr->setRcByte(1 << IRr->getRc());
+				IRr->setParity(IRr->getParity() + 1);
 			}
 			IRr->setRc((IRr->getRc() + 1));
 		}
 		else
 		{
-			IRr->setStop(0);
-			IRr->setStart(0);
-			IRr->setRc(0);
-			IRr->toBuff(IRr->getRcByte());
-			IRr->resetRcByte();
+			if(IRr->getParity() & 1)
+			{
+				if(IRr->getStop() == 2)
+				{
+					IRr->setStop(0);
+					IRr->setStart(0);
+					IRr->setRc(0);
+					IRr->toBuff(IRr->getRcByte());
+					IRr->resetRcByte();
+					IRr->setParity(0);
+				}
+			}
+			else
+			{
+				IRr->setStop(0);
+				IRr->setStart(0);
+				IRr->setRc(0);
+				IRr->toBuff(IRr->getRcByte());
+				IRr->resetRcByte();
+				IRr->setParity(0);
+			}
 		}
-		if((IRr->getBitTime() >=34) && (IRr->getBitTime() <= 44)) IRr->setStart((IRr->getStart() + 1));
-		if((IRr->getBitTime() >=47) && (IRr->getBitTime() <= 57)) IRr->setStop((IRr->getStop() + 1));
+		if((IRr->getBitTime() >=31) && (IRr->getBitTime() <= 35)) IRr->setStart((IRr->getStart() + 1));
+		if((IRr->getBitTime() >=43) && (IRr->getBitTime() <= 48)) IRr->setStop((IRr->getStop() + 1));
 	}
 	else
 	{
@@ -140,17 +177,32 @@ ISR (INT0_vect)
 	}
 }
 
-int main(void){
+int main(void)
+{
+	IRs->setStart(0);
+	IRs->setBitCount(0);
+	IRs->setCurByte(0);
+	IRs->setParity(0);
+	Serial.begin(9600);
+
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
 	WA = new WalkingAnimation(lcd);
 	lcd->begin();
 	Touch touch(lcd);
-	IRs->sendByte(255);
+
   setTimer1();
 
 	while(1)
 	{
+		/*		//Send and receive IR
+		IRs->toBuff(221);
+
+		while(IRr->buffAvail())
+		{
+			Serial.println(IRr->fromBuff());
+		}
+		*/
 		if(gameStatus == 0)	{
 			Menu* menu = new Menu(lcd);
 			while(1){
@@ -195,47 +247,47 @@ int main(void){
 					break;
 				}
 			}
-      levelSelect = optMenu->getSelectedLevel();
+			levelSelect = optMenu->getSelectedLevel();
 			delete optMenu;
 		}
 
-    if(gameStatus == 3){
-      AfterGame* AG = new AfterGame(lcd, WA, 2000, 300);
-      while(1){
-        AG->Update();
-        if(AG->getStatus()!=3){
-          gameStatus = AG->getStatus();
-          break;
-        }
-      }
-      highscore = AG->getHighScore();
-      delete AG;
-    }
+		if(gameStatus == 3){
+		  AfterGame* AG = new AfterGame(lcd, WA, 2000, 300);
+		  while(1){
+			AG->Update();
+			if(AG->getStatus()!=3){
+			  gameStatus = AG->getStatus();
+			  break;
+			}
+		  }
+		  highscore = AG->getHighScore();
+		  delete AG;
+		}
     
-    if(gameStatus==4){
-        SaveHighScore* HS = new SaveHighScore(lcd, highscore);
-        while(1){
-          HS->Update();
-          if(HS->getStatus()!=4){
-            gameStatus = HS->getStatus();
-            break;
-          }
-        }
-        delete HS;
-    }
+		if(gameStatus==4){
+			SaveHighScore* HS = new SaveHighScore(lcd, highscore);
+			while(1){
+			  HS->Update();
+			  if(HS->getStatus()!=4){
+				gameStatus = HS->getStatus();
+				break;
+			  }
+			}
+			delete HS;
+		}
 
-    if(gameStatus==5){
-      WatchHighScore* WH = new WatchHighScore(lcd);
+		if(gameStatus==5){
+		  WatchHighScore* WH = new WatchHighScore(lcd);
 
-      while(1){
-        WH->Update();
-        if(WH->getStatus()!=5){
-          gameStatus = WH->getStatus();
-          break;
-        }
-      }
-      delete WH;
-    }
+		  while(1){
+			WH->Update();
+			if(WH->getStatus()!=5){
+			  gameStatus = WH->getStatus();
+			  break;
+			}
+		  }
+		  delete WH;
+		}
 	}
 }
 
