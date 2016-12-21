@@ -30,7 +30,6 @@ WatchHighScore::WatchHighScore(MI0283QT9* lcd_g){
     {   
           
       unsigned int two = ((Scores[j][3] << 8) & 0xFFFF) + ((Scores[j][4]) & 0xFF);
-      // for descending sort change '<' with '>'
       if (one < two)
       {
         iTempOne = Scores[i][3];
