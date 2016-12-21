@@ -66,11 +66,18 @@ ISR(TIMER2_COMPB_vect)
 	
 	IRr->setCount(IRr->getCount()+1); //Verhoog de count variabele in de klasse irRecv. Hier wordt a mee berekend.
 	IRs->setCount(IRs->getCount()+1);
-	
+
 	if(IRs->getBitSend() == 1 && IRs->getCount() == 13)
 	{
 		if(IRs->getStart()) DDRD |= (1 << PORTD3);
 		IRs->setBitSend(0);
+		IRs->setCount(0);
+	}
+
+	if((IRs->getCount() == 10) && !(IRs->getBitSend()) && !(IRs->getCurByte()))
+	{
+		DDRD ^= (1 << PORTD3);
+		IRs->setBitSend(1);
 		IRs->setCount(0);
 	}
 
@@ -80,15 +87,15 @@ ISR(TIMER2_COMPB_vect)
 		DDRD |= (1 << PORTD3);
 		IRs->setCount(0);
 	}
-	
+
 	if(IRs->getCount() == 34 && !(IRs->getStart()) && IRs->getCurByte())
 	{
 		DDRD &= ~(1 << PORTD3);
 		IRs->setCount(0);
 		IRs->setBitSend(1);
 		IRs->setStart(1);
-	}
-	
+	}	
+
 	if(IRs->getStart() && !(IRs->getBitSend()) && IRs->getBitCount() < 15)
 	{
 		if(IRs->getCount() == 10 && !(1 & (IRs->getCurByte() >> IRs->getBitCount())))
@@ -184,6 +191,7 @@ int main(void)
 	IRs->setCurByte(0);
 	IRs->setParity(0);
 	Serial.begin(9600);
+	IRs->toBuff(255);
 
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
@@ -196,13 +204,15 @@ int main(void)
 	while(1)
 	{
 		/*		//Send and receive IR
-		IRs->toBuff(221);
+		//IRs->toBuff(221);
 
 		while(IRr->buffAvail())
 		{
 			Serial.println(IRr->fromBuff());
 		}
+		_delay_ms(10);
 		*/
+
 		if(gameStatus == 0)	{
 			Menu* menu = new Menu(lcd);
 			while(1){
