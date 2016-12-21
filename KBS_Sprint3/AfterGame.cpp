@@ -5,7 +5,7 @@
 AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScore, int playerTwoScore){
 		lcd = lcd_g;
     WA = WA_g;
-		lcd->touchRead();
+
 		lcd->fillScreen(BACKGROUND);
 
     //Draw the players in a square
@@ -28,13 +28,15 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
       lcd->drawText(191, 10, "LOSER", BLACK, BACKGROUND, 2);
       lcd->drawInteger(63, 101, playerOneScore, 10, RED, BACKGROUND, 2);
       lcd->drawInteger(201, 101, playerTwoScore, 10, BLACK, BACKGROUND, 2);
+      highScore = playerOneScore;
     } else if(playerOneScore<playerTwoScore){
       lcd->drawRect(204, 28, 52, 68, RED);
       lcd->drawRect(205, 29, 50, 66, RED);
       lcd->drawText(55, 10, "LOSER", BLACK, BACKGROUND, 2);
       lcd->drawText(184, 10, "WINNER", RED, BACKGROUND, 2);
       lcd->drawInteger(63, 101, playerOneScore, 10, BLACK, BACKGROUND, 2);
-    lcd->drawInteger(201, 101, playerTwoScore, 10, RED, BACKGROUND, 2);
+      lcd->drawInteger(201, 101, playerTwoScore, 10, RED, BACKGROUND, 2);
+      highScore = playerTwoScore;
     } else{
       lcd->drawRect(68, 28, 52, 68, RED);
       lcd->drawRect(69, 29, 50, 66, RED);
@@ -44,6 +46,7 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
       lcd->drawText(204, 10, "TIE", RED, BACKGROUND, 2);
       lcd->drawInteger(63, 101, playerOneScore, 10, RED, BACKGROUND, 2);
       lcd->drawInteger(201, 101, playerTwoScore, 10, RED, BACKGROUND, 2);
+      highScore = playerOneScore;
     }
 }
 
@@ -56,7 +59,7 @@ void AfterGame::Update(){
       lcd->drawText(55, 155, "Save Highscore", BLACK, RED, 2);
       lcd->fillRoundRect(35, 190, 250, 40, 10, BLACK);
       lcd->drawText(65, 205, "Back To Menu", RED, BLACK, 2);
-    //Go to save highscore screen
+      status = 4;
     }
     else if(lcd->touchX()>35 && lcd->touchX()<285 && lcd->touchY()>190 && lcd->touchY()<230)
     {
@@ -72,5 +75,9 @@ void AfterGame::Update(){
 uint8_t AfterGame::getStatus()
 {
   return status;
+}
+
+int AfterGame::getHighScore(){
+  return highScore;
 }
 

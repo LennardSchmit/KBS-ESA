@@ -200,7 +200,7 @@ int main(void){
 		}
 
     if(gameStatus == 3){
-      AfterGame* AG = new AfterGame(lcd, WA, 1600, 1600);
+      AfterGame* AG = new AfterGame(lcd, WA, 2000, 300);
       while(1){
         AG->Update();
         if(AG->getStatus()!=3){
@@ -208,6 +208,7 @@ int main(void){
           break;
         }
       }
+      highscore = AG->getHighScore();
       delete AG;
     }
     
