@@ -17,6 +17,10 @@ class WalkingAnimation {
     void drawBigStanding(int x, int y, uint8_t selectPlayer);
     void drawPartBig(int x, int y, uint8_t part[8][12]);
     void mirrorAll();
+
+    void drawBomb(int x, int y, uint8_t selectPlayer);
+
+    void drawBlock(int x, int y, uint8_t selectBlock);
 	
 	private:
   	MI0283QT9* lcd;

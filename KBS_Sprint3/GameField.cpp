@@ -24,11 +24,11 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, Player
 		{
 			switch(mp->getFieldValue(x, y)){
 				case 1:			//undestroyable block
-					lcd->fillRect( leftcornerX, leftcornerY, SIZE, SIZE, BACKGROUND);
+					WA->drawBlock(leftcornerX, leftcornerY, 1);
 				break;
 
 				case 2:			//destroyable block
-					lcd->fillRect( leftcornerX, leftcornerY, SIZE, SIZE, RED);
+					WA->drawBlock(leftcornerX, leftcornerY, 0);
 				break;
 
 				case 3:			//player (Nunchuck)
