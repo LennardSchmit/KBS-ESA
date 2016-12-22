@@ -134,6 +134,11 @@
 </AvrGccCpp>
     </ToolchainSettings>
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Users/Rick/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../../KBS_Sprint3;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility;C:/Users/Rick/Documents/Arduino/libraries/digitalWriteFast;C:/Users/Rick/Documents/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src;C:/Program Files (x86)/Arduino/libraries/MI0283QT9;C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility;C:/Users/D.Hergaarden/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast;C:/Program Files (x86)/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility;C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility;C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers;</VMSETTING_IncludePaths>
+    <VisualMicroSettings>
+      <VisualMicroSettings xmlns="">
+        <arduino.upload.port>COM4</arduino.upload.port>
+      </VisualMicroSettings>
+    </VisualMicroSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
@@ -229,6 +234,11 @@
 </AvrGccCpp>
     </ToolchainSettings>
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Users/Rick/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../../KBS_Sprint3;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility;C:/Users/Rick/Documents/Arduino/libraries/digitalWriteFast;C:/Users/Rick/Documents/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src;C:/Program Files (x86)/Arduino/libraries/MI0283QT9;C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility;C:/Users/D.Hergaarden/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast;C:/Program Files (x86)/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility;C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility;C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers;</VMSETTING_IncludePaths>
+    <VisualMicroSettings>
+      <VisualMicroSettings xmlns="">
+        <arduino.upload.port>COM4</arduino.upload.port>
+      </VisualMicroSettings>
+    </VisualMicroSettings>
   </PropertyGroup>
   <ItemGroup>
     <None Include="KBS_Sprint3.ino">

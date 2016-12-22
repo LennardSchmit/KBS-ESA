@@ -108,3 +108,63 @@ void irRecv::setParity(int par_g)
 {
 	parity = par_g;
 }
+
+void irRecv::bombToBuff(int inByte)
+{
+	bombBuffer[bombToIndex] = inByte;
+	bombToIndex++;
+	if(bombToIndex == BUFFER_LENGTH) bombToIndex--;
+}
+
+int irRecv::bombFromBuff()
+{
+	uint8_t bombIndex = bombFromIndex;
+	if(bombFromIndex < bombToIndex) bombFromIndex++;
+	else
+	{
+		bombFromIndex = 0;
+		bombToIndex = 0;
+		bombIndex = 0;
+	}
+	return bombBuffer[bombIndex];
+}
+
+bool irRecv::bombBuffAvail()
+{
+	return bombToIndex;
+}
+
+void irRecv::remainingToBuff(int inByte)
+{
+	remainingBuffer[remainingToIndex] = inByte;
+	remainingToIndex++;
+	if(remainingToIndex == BUFFER_LENGTH) remainingToIndex--;
+}
+
+int irRecv::remainingFromBuff()
+{
+	uint8_t remainingIndex = remainingFromIndex;
+	if(remainingFromIndex < remainingToIndex) remainingFromIndex++;
+	else
+	{
+		remainingFromIndex = 0;
+		remainingToIndex = 0;
+		remainingIndex = 0;
+	}
+	return remainingBuffer[remainingIndex];
+}
+
+bool irRecv::remainingBuffAvail()
+{
+	return remainingToIndex;
+}
+
+void irRecv::setSBuf(int selbuf)
+{
+	sBuf = selbuf;
+}
+
+int irRecv::getSBuf()
+{
+	return sBuf;
+}

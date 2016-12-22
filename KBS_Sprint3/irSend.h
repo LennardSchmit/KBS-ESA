@@ -28,6 +28,14 @@ class irSend
 		void setStart(int);
 		uint8_t getParity();
 		void setParity(int);
+		void bombToBuff(int);
+		int bombFromBuff();
+		bool bombBuffAvail();
+		void remainingToBuff(int);
+		int remainingFromBuff();
+		bool remainingBuffAvail();
+		int getSBuf();
+		void setSBuf(int);
 	private:
 		int bytes;
 		uint8_t count;
@@ -39,8 +47,13 @@ class irSend
 		uint8_t fromIndex = 0;
 		int *buffer[BUFFER_LENGTH];
 		uint8_t parity;
-
+		uint8_t bombToIndex = 0;
+		uint8_t bombFromIndex = 0;
+		int *bombBuffer[BUFFER_LENGTH];
+		uint8_t remainingToIndex = 0;
+		uint8_t remainingFromIndex = 0;
+		int *remainingBuffer[BUFFER_LENGTH];
+		int sBuf;
 };
 
 #endif
-

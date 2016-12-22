@@ -31,6 +31,14 @@ class irRecv
 		void resetRcByte();
 		uint8_t getParity();
 		void setParity(int);
+		void bombToBuff(int);
+		int bombFromBuff();
+		bool bombBuffAvail();
+		void remainingToBuff(int);
+		int remainingFromBuff();
+		bool remainingBuffAvail();
+		int getSBuf();
+		void setSBuf(int);
 	private:
 		uint8_t count;
 		uint8_t toIndex = 0;
@@ -42,7 +50,13 @@ class irRecv
 		uint8_t stop = 0;
 		int rcByte = 0; //De ontvangen byte
 		uint8_t parity;
+		uint8_t bombToIndex = 0;
+		uint8_t bombFromIndex = 0;
+		int *bombBuffer[BUFFER_LENGTH];
+		uint8_t remainingToIndex = 0;
+		uint8_t remainingFromIndex = 0;
+		int *remainingBuffer[BUFFER_LENGTH];
+		int sBuf;
 };
 
 #endif
-

@@ -95,3 +95,63 @@ void irSend::setParity(int par_g)
 {
 	parity = par_g;
 }
+
+void irSend::bombToBuff(int inByte)
+{
+	bombBuffer[bombToIndex] = inByte;
+	bombToIndex++;
+	if(bombToIndex == BUFFER_LENGTH) bombToIndex--;
+}
+
+int irSend::bombFromBuff()
+{
+	uint8_t bombIndex = bombFromIndex;
+	if(bombFromIndex < bombToIndex) bombFromIndex++;
+	else
+	{
+		bombFromIndex = 0;
+		bombToIndex = 0;
+		bombIndex = 0;
+	}
+	return bombBuffer[bombIndex];
+}
+
+bool irSend::bombBuffAvail()
+{
+	return bombToIndex;
+}
+
+void irSend::remainingToBuff(int inByte)
+{
+	remainingBuffer[remainingToIndex] = inByte;
+	remainingToIndex++;
+	if(remainingToIndex == BUFFER_LENGTH) remainingToIndex--;
+}
+
+int irSend::remainingFromBuff()
+{
+	uint8_t remainingIndex = remainingFromIndex;
+	if(remainingFromIndex < remainingToIndex) remainingFromIndex++;
+	else
+	{
+		remainingFromIndex = 0;
+		remainingToIndex = 0;
+		remainingIndex = 0;
+	}
+	return remainingBuffer[remainingIndex];
+}
+
+bool irSend::remainingBuffAvail()
+{
+	return remainingToIndex;
+}
+
+void irSend::setSBuf(int selbuf)
+{
+	sBuf = selbuf;
+}
+
+int irSend::getSBuf()
+{
+	return sBuf;
+}

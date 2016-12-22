@@ -22,7 +22,7 @@
 #define OFFSETX 48
 #define OFFSETY 13
 
-uint8_t gameStatus = 3;
+uint8_t gameStatus = 1;
 uint8_t levelSelect = 1;
 uint8_t OnehzCounter = 0;
 uint8_t gameTimer = 0;
@@ -61,34 +61,65 @@ irSend *IRs = new irSend();
 irRecv *IRr = new irRecv();
 Timer_Display* timer1;
 
+//Verzenden IR
 ISR(TIMER2_COMPB_vect)
 {
-	
-	IRr->setCount(IRr->getCount()+1); //Verhoog de count variabele in de klasse irRecv. Hier wordt a mee berekend.
-	IRs->setCount(IRs->getCount()+1);
+	IRr->setCount(IRr->getCount()+1); //Counter voor het ontvangen.
+	IRs->setCount(IRs->getCount()+1); // Counter voor het verzenden.
 
-	if(IRs->getBitSend() == 1 && IRs->getCount() == 13)
+	if(IRs->getBitSend() == 1 && IRs->getCount() == 13) //Zorg voor +-350 us tussentijd en zet daarna het 38 khz signaal weer op de pin
 	{
-		if(IRs->getStart()) DDRD |= (1 << PORTD3);
-		IRs->setBitSend(0);
-		IRs->setCount(0);
+		if(IRs->getStart()) DDRD |= (1 << PORTD3); //Het enablen van het signaal op de pin
+		IRs->setBitSend(0); //Aangeven dat er een bit verzonden mag worden
+		IRs->setCount(0); //De counter op 0 zetten
 	}
 
-	if((IRs->getCount() == 10) && !(IRs->getBitSend()) && !(IRs->getCurByte()))
+	if((IRs->getCount() == 10) && !(IRs->getBitSend()) && !(IRs->getCurByte())) //Wanneer er geen bits verzonden worden, toch IR signaal blijven verzenden
 	{
-		DDRD ^= (1 << PORTD3);
-		IRs->setBitSend(1);
-		IRs->setCount(0);
+		DDRD ^= (1 << PORTD3); //38 khz signaal enablen disablen
+		IRs->setBitSend(1); // aangeven dat er een bit verzonden, zodat de bovenstaande if 350us wacht tussen de bits.
+		IRs->setCount(0); //counter weer op 0
 	}
 
-	if(IRs->buffAvail() && !(IRs->getCurByte()) && !(IRs->getBitSend()))
+	if(IRs->bombBuffAvail() && !(IRs->getCurByte()) && !(IRs->getBitSend())) //Wanneer iets in de bombbuffer staat. Prio 1
+	{
+		IRs->setCurByte(IRs->bombFromBuff()); //De byte die verzonden moet worden, wordt uit de verzendbuffer gehaald
+		DDRD |= (1 << PORTD3); //signaal wordt op de poort gezet
+		IRs->setCount(0); // count weer op 0
+		IRs->setSBuf(2); //Hiermee wordt aangegeven uit welke buffer de byte komt en daardoor wordt het juiste startbit verzonden.
+	}
+	else if(IRs->remainingBuffAvail() && !(IRs->getCurByte()) && !(IRs->getBitSend())) //Wanneer iets in de remaining buffer staat. Prio 2
+	{
+		IRs->setCurByte(IRs->remainingFromBuff());
+		DDRD |= (1 << PORTD3);
+		IRs->setCount(0);
+		IRs->setSBuf(1);
+	}
+	else if(IRs->buffAvail() && !(IRs->getCurByte()) && !(IRs->getBitSend())) //Wanneer iets in de buffer staat. Prio 3. 
 	{
 		IRs->setCurByte(IRs->fromBuff());
 		DDRD |= (1 << PORTD3);
 		IRs->setCount(0);
+		IRs->setSBuf(0);
 	}
 
-	if(IRs->getCount() == 34 && !(IRs->getStart()) && IRs->getCurByte())
+	if(IRs->getCount() == 34 && !(IRs->getStart()) && IRs->getCurByte() && !(IRs->getSBuf())) //Het verzenden van een startbit voor de normale buffer
+	{
+		DDRD &= ~(1 << PORTD3);
+		IRs->setCount(0);
+		IRs->setBitSend(1);
+		IRs->setStart(1);
+	}
+	
+	if(IRs->getCount() == 68 && !(IRs->getStart()) && IRs->getCurByte() && (IRs->getSBuf() == 1)) //Het verzenden van een startbit voor de remaining buffer
+	{
+		DDRD &= ~(1 << PORTD3);
+		IRs->setCount(0);
+		IRs->setBitSend(1);
+		IRs->setStart(1);
+	}
+
+	if(IRs->getCount() == 57 && !(IRs->getStart()) && IRs->getCurByte() && (IRs->getSBuf() == 2)) //Het verzenden van een startbit voor de bombbuffer
 	{
 		DDRD &= ~(1 << PORTD3);
 		IRs->setCount(0);
@@ -96,9 +127,9 @@ ISR(TIMER2_COMPB_vect)
 		IRs->setStart(1);
 	}	
 
-	if(IRs->getStart() && !(IRs->getBitSend()) && IRs->getBitCount() < 15)
+	if(IRs->getStart() && !(IRs->getBitSend()) && IRs->getBitCount() < 16) // Wanneer de 16 bits nog niet verzonden zijn.
 	{
-		if(IRs->getCount() == 10 && !(1 & (IRs->getCurByte() >> IRs->getBitCount())))
+		if(IRs->getCount() == 10 && !(1 & (IRs->getCurByte() >> IRs->getBitCount()))) //Het verzenden van een 0
 		{
 			DDRD &= ~(1 << PORTD3);
 			IRs->setCount(0);
@@ -106,24 +137,24 @@ ISR(TIMER2_COMPB_vect)
 			IRs->setBitCount(IRs->getBitCount() + 1);
 		}
 		
-		if(IRs->getCount() == 23 && (1 & (IRs->getCurByte() >> IRs->getBitCount())))
+		if(IRs->getCount() == 23 && (1 & (IRs->getCurByte() >> IRs->getBitCount()))) //Het verzenden van een 1
 		{
 			DDRD &= ~(1 << PORTD3);
 			IRs->setCount(0);
 			IRs->setBitSend(1);
 			IRs->setBitCount(IRs->getBitCount() + 1);
-			IRs->setParity(IRs->getParity() + 1);
+			IRs->setParity(IRs->getParity() + 1); //Voor het tellen van het aantal enen voor parity bit
 		}
 	}
 	
-	if(IRs->getBitCount() == 15 && !(IRs->getBitSend()) && IRs->getCount() == 46)
+	if(IRs->getBitCount() == 16 && !(IRs->getBitSend()) && IRs->getCount() == 46) //verzenden van stopbit
 	{
 		DDRD &= ~(1 << PORTD3);
 		
 		IRs->setBitSend(1);
 		IRs->setCount(0);
 
-		if(!(IRs->getParity() & 1))
+		if((IRs->getParity() & 1)) //Checkt of het aantal enen oneven is. Wanneer dit niet zo is, wordt er nog een stopbit verzonden.
 		{
 			IRs->setStart(0);
 			IRs->setBitCount(0);
@@ -132,55 +163,124 @@ ISR(TIMER2_COMPB_vect)
 		}
 		else
 		{
-			IRs->setParity(0);
+			IRs->setParity(1);
 		}
 	}
 }
 
+// Ontvangen IR
 ISR (INT0_vect)
 {
-	if(PIND & (1 << PIND2))
+	if(PIND & (1 << PIND2)) // Op de opgaande flank van een bit wordt deze if uitgevoerd
 	{
-		IRr->setBitTime(IRr->getCount());
-		if(IRr->getStart() == 1 && IRr->getStop() == 0)
-		{
-			if((IRr->getBitTime() >=22) && (IRr->getBitTime() <= 25))
+		IRr->setBitTime(IRr->getCount()); // De huidige counter waarde wordt opgeslagen.
+			
+			if(!(IRr->getStop()) && IRr->getStart()) //Wanneer het startbit ontvangen is en het stopbit nog niet
 			{
-				IRr->setRcByte(1 << IRr->getRc());
-				IRr->setParity(IRr->getParity() + 1);
-			}
-			IRr->setRc((IRr->getRc() + 1));
-		}
-		else
-		{
-			if(IRr->getParity() & 1)
-			{
-				if(IRr->getStop() == 2)
+				if((IRr->getBitTime() >=20) && (IRr->getBitTime() <= 26)) //Als de tijd van een bit tussen 20 en 26 ligt volgens de counter waarde
 				{
-					IRr->setStop(0);
+					IRr->setRcByte(1 << IRr->getRc()); //Er wordt op de juiste plek een 1 geshift.
+					IRr->setParity(IRr->getParity() + 1); //Hier wordt ook het aantal enen geteld
+				}
+				IRr->setRc((IRr->getRc() + 1)); //Hier worden het aantal ontvangen bits bijgehouden
+			}
+
+			if(IRr->getStop() == 1) //Als het stopbit ontvangen is
+			{
+				if(IRr->getParity() & 1) //Als het getal oneven is
+				{
+					IRr->setStart(0); //Start wordt op 0 0 gezet, zodat er opnieuw een startbit ontvangen kan worden.
+					IRr->setRc(0); //Het aantal ontvangen bits wordt op 0 gezet
+					IRr->setStop(0); //Het aantal ontvangen stopbits wordt op 0 gezet
+
+					if(IRr->getRcByte()) //Als de ontvangen byte geen 0 is.
+					{
+						switch(IRr->getSBuf()) //Afhankelijk van welk startbit er verzonden is wordt hier de juiste buffer gekozen
+						{
+							case 0:
+							IRr->toBuff(IRr->getRcByte());
+							break;
+
+							case 1:
+							IRr->remainingToBuff(IRr->getRcByte());
+							break;
+
+							case 2:
+							IRr->bombToBuff(IRr->getRcByte());
+							break;
+						}
+					}
+
+					IRr->resetRcByte(); //De ontvangen byte wordt op 0 gezet
+					IRr->setParity(0); //Parite (het aantal enen ontvangen) wordt op 0 gezet.
+				}
+			}
+
+			if(IRr->getStop() == 2) //Als er twee stopbits ontvangen zijn.
+			{
+				if(!(IRr->getParity() & 1)) //Als het getal even is
+				{
 					IRr->setStart(0);
 					IRr->setRc(0);
-					IRr->toBuff(IRr->getRcByte());
+					IRr->setStop(0);
+
+					if(IRr->getRcByte())
+					{
+						switch(IRr->getSBuf())
+						{
+							case 0:
+							IRr->toBuff(IRr->getRcByte());
+							break;
+
+							case 1:
+							IRr->remainingToBuff(IRr->getRcByte());
+							break;
+
+							case 2:
+							IRr->bombToBuff(IRr->getRcByte());
+							break;
+						}
+					}
+
 					IRr->resetRcByte();
 					IRr->setParity(0);
 				}
-			}
-			else
-			{
-				IRr->setStop(0);
-				IRr->setStart(0);
-				IRr->setRc(0);
-				IRr->toBuff(IRr->getRcByte());
-				IRr->resetRcByte();
-				IRr->setParity(0);
-			}
+				else 
+				/*Wanneer de parity niet klopt, wordt de waarde niet in de buffer gezet. 
+				  Wanneer de parity check niet klopt, kan het zijn dat de volgende byte ook niet in de buffer wordt gezet.
+				  De daaropvolgende bits gaan wel goed.*/
+				{
+					IRr->setStart(0);
+					IRr->setRc(0);
+					IRr->setStop(0);
+					IRr->resetRcByte();
+					IRr->setParity(0);
+				}
+			}		
+		
+		if((IRr->getBitTime() >=32) && (IRr->getBitTime() <= 38)) //Wanneer een startbit voor de normale buffer ontvangen is.
+		{ 
+			IRr->setStart((IRr->getStart() + 1));
+			IRr->setSBuf(0);
 		}
-		if((IRr->getBitTime() >=31) && (IRr->getBitTime() <= 35)) IRr->setStart((IRr->getStart() + 1));
-		if((IRr->getBitTime() >=43) && (IRr->getBitTime() <= 48)) IRr->setStop((IRr->getStop() + 1));
+
+		if((IRr->getBitTime() >=55) && (IRr->getBitTime() <= 61)) //Wanneer een startbit voor de bommenbuffer ontvangen is.
+		{
+			IRr->setStart((IRr->getStart() + 1));
+			IRr->setSBuf(2);
+		}
+
+		if((IRr->getBitTime() >=65) && (IRr->getBitTime() <= 71)) //Wanneer een startbit voor de remainingbuffer ontvangen is.
+		{			
+			IRr->setSBuf(1);
+			IRr->setStart((IRr->getStart() + 1));		
+		}
+
+		if((IRr->getBitTime() >=44) && (IRr->getBitTime() <= 50)) IRr->setStop((IRr->getStop() + 1)); //Wanneer een stopbit onvangen is.
 	}
-	else
+	else //Op de neergaande flank wordt de counter op 0 gezet
 	{
-		IRr->setCount(0); //Wanneer het signaal op pin 2 hoog is wordt de counter op 0 gezet.
+		IRr->setCount(0); //Wanneer het signaal op pin 2 laag wordt, wordt de counter op 0 gezet.
 	}
 }
 
@@ -203,16 +303,6 @@ int main(void)
 
 	while(1)
 	{
-		/*		//Send and receive IR
-		//IRs->toBuff(221);
-
-		while(IRr->buffAvail())
-		{
-			Serial.println(IRr->fromBuff());
-		}
-		_delay_ms(10);
-		*/
-
 		if(gameStatus == 0)	{
 			Menu* menu = new Menu(lcd);
 			while(1){
@@ -235,6 +325,14 @@ int main(void)
 			gameTimer = 1;
 
 			while(1){
+				IRs->bombToBuff(291);
+				IRs->bombToBuff(290);
+				
+				if(IRr->bombBuffAvail())
+				{
+					Serial.println(IRr->bombFromBuff());
+				}
+				
 				NC->ANupdate();
 				if(NC->getZButton()){
 					if(playerNC->getBomb()){
