@@ -14,7 +14,9 @@
 Player_NC::~Player_NC(){}
 
 bool Player_NC::updatePlayer(){
-	
+	if(invinsibility > 0){
+		invinsibility--;
+	}
 	status = 0;
 	switch (NC->getStatus())							//switches to the direction the nunchuk is positioned options are left - right - up - down
 	{

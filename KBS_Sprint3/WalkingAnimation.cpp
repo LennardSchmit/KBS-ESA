@@ -144,7 +144,7 @@ WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g){
 
 //leg is the feet that is in the air, 0 is right and 1 is left.
 void WalkingAnimation::drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]){
-  lcd->fillRect(x-2, y-2, 16, 20 , BLACK);
+  //lcd->fillRect(x-2, y-2, 16, 20 , BLACK);
   if(!mirrorTop)
   {
     drawPart(x, y, characterTop);
@@ -169,7 +169,7 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
     for(int i = 0; i < 8; i++){
   		for(int p = 0; p < 12; p++){
         switch(pgm_read_byte(&part[i][p])){
-  				case 0: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+  				//case 0: lcd->drawPixel((p+x), (i+y), BLACK);   break;
   				case 1: lcd->drawPixel((p+x), (i+y), PLAYERBLACK);   break;
   				case 2: lcd->drawPixel((p+x), (i+y), GREEN1);  break;
   				case 3: lcd->drawPixel((p+x), (i+y), GREEN2);  break;
@@ -190,7 +190,7 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
     for(int i = 0; i < 8; i++){
       for(int p = 0; p < 12; p++){
         switch(pgm_read_byte(&part[i][p])){
-          case 0: lcd->drawPixel((p+x), (i+y), BLACK);   break;
+          //case 0: lcd->drawPixel((p+x), (i+y), BLACK);   break;
           case 1: lcd->drawPixel((p+x), (i+y), PLAYERBLACK);   break;
           case 2: lcd->drawPixel((p+x), (i+y), RED1);  break;
           case 3: lcd->drawPixel((p+x), (i+y), RED2);  break;
@@ -216,7 +216,7 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
   		uint8_t s = 0;
   		for(uint8_t p = 11; p < 255; p--){
   			switch(pgm_read_byte(&part[i][p])){
-  				case 0: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+  				//case 0: lcd->drawPixel((s+x), (i+y), BLACK);   break;
   				case 1: lcd->drawPixel((s+x), (i+y), PLAYERBLACK);   break;
   				case 2: lcd->drawPixel((s+x), (i+y), GREEN1);  break;
   				case 3: lcd->drawPixel((s+x), (i+y), GREEN2);  break;
@@ -239,7 +239,7 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
       uint8_t s = 0;
       for(uint8_t p = 11; p < 255; p--){
         switch(pgm_read_byte(&part[i][p])){
-          case 0: lcd->drawPixel((s+x), (i+y), BLACK);   break;
+          //case 0: lcd->drawPixel((s+x), (i+y), BLACK);   break;
           case 1: lcd->drawPixel((s+x), (i+y), PLAYERBLACK);   break;
           case 2: lcd->drawPixel((s+x), (i+y), RED1);  break;
           case 3: lcd->drawPixel((s+x), (i+y), RED2);  break;

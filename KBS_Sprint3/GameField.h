@@ -13,7 +13,11 @@ class GameField {
 		void updateGameField_pl_ir();
 		void placeBombNC();
 		void placeBombIR();
+		void updateBombs();
 	private:
+		void updateBombArray(uint8_t index);
+		void explodeBomb(uint8_t index);
+		uint8_t bombsIndex;
 		MI0283QT9* lcd;
 		Map* mp;
 		Player* pl_nc;

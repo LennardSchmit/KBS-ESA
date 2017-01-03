@@ -323,16 +323,15 @@ int main(void)
 			Player* playerIR = new Player_IR(MP, 2, IRr);
 			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);    
 			gameTimer = 1;
-
-			while(1){
-				IRs->bombToBuff(291);
-				IRs->bombToBuff(290);
-				
+			while(1){		
 				if(IRr->bombBuffAvail())
 				{
-					Serial.println(IRr->bombFromBuff());
+					//Serial.println(IRr->bombFromBuff());
 				}
-				
+				if(!(playerNC->getLife())){
+					break;
+				}
+				gameField->updateBombs();	
 				NC->ANupdate();
 				if(NC->getZButton()){
 					if(playerNC->getBomb()){
@@ -343,7 +342,10 @@ int main(void)
 					gameField->updateGameField_pl_nc();
 				}
 			}
-			return 0;
+			delete MP;
+			delete gameField;
+			gameStatus = 3;
+			//return 0;
 		}
 
 		if(gameStatus == 2){
