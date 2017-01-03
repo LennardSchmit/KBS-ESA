@@ -4,8 +4,8 @@
 Timer_Display::Timer_Display(){
 	time[0] = 9;				//contains the left value (tens)
 	time[1] = 9;				//contains the right value
-	DDRC |= (1 << PORTC1);		//data  pin
-	DDRC |= (1 << PORTC2);		//clock pin
+	DDRC |= (1 << PORTC2);		//data  pin
+	DDRC |= (1 << PORTC1);		//clock pin
 	DDRC |= (1 << PORTC3);		//latch pin
 }
 
@@ -33,14 +33,18 @@ void Timer_Display::shiftOut()
 {
 	PORTC &= ~(1 << PORTC3);							//disable bit shift register output
 	uint8_t i, n;
-	for(n = 0; n < 2; n++){
-		for (i = 7; i < 255; i--)  {
+	for(n = 2; n < 255; n--){
+		for (i = 0; i < 8; i++)  {
 			if(!!(digit_code[time[n]] & (1 << i)))	//this if and else sets the value of bit i to 0 or 1
-				PORTC |=  (1 << PORTC1);
+			{
+				PORTC |=  (1 << PORTC2);
+			}
 			else
-				PORTC &= ~(1 << PORTC1);
-			PORTC |=  (1 << PORTC2);					//sets clock on and off to send bit
-			PORTC &= ~(1 << PORTC2);
+			{
+				PORTC &= ~(1 << PORTC2);
+			}
+			PORTC |=  (1 << PORTC1);					//sets clock on and off to send bit
+			PORTC &= ~(1 << PORTC1);
 		}
 	}
 	PORTC |=  (1 << PORTC3);							//enable bit shift register output
