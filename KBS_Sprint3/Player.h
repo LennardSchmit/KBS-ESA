@@ -7,7 +7,7 @@
 class Player{
 	public:
 
-    Player(Map* MP_g, uint8_t bombs_g):MP(MP_g), bombs(3), bombRange(4), life(3), invinsibility(0){}
+    Player(Map* MP_g, uint8_t bombs_g):MP(MP_g), bombs(bombs_g){}
 		virtual ~Player() = 0;
 		
 		void setPosition(uint8_t xPos_g, uint8_t yPos_g);	//this is called by gamefield to set the location based on the map design in Map.cpp
@@ -27,28 +27,18 @@ class Player{
 		void updatePos();				//updates the old position values with the current position values
 		
 		uint8_t getStatus();
-		uint8_t getStepsize();
 		uint8_t getBomb();
-		void minBomb();
-		void plusBomb();
 		uint8_t getBombX();
 		uint8_t getBombY();		
-		uint8_t getBombRange();
-		bool checkExplosion(uint8_t x, uint8_t y);
-		uint8_t getLife();
+		
 		virtual bool updatePlayer();	//updates player positions with the values of the nunchuk
 
 	protected:
 
-		void minLife();
-		void toString();
 		Map* MP;
 		uint8_t status;
 		bool statusZero;
 		uint8_t bombs;
-		uint8_t bombRange;
-		uint8_t invinsibility;
-		uint8_t life;
 		uint8_t xPos;				//Position on the X axis range 0 - 10	
 		uint8_t yPos;				//Position on the Y axis range 0 - 8
 		uint8_t xStep;				//Offset of xPos can range from 0 - 23 if xStep has a value higher than 0 yStep has to be 0 and vice versa
@@ -57,8 +47,6 @@ class Player{
 		uint8_t oldYPos;			//Is the old position of the yPos is kept for resetting lcd
 		uint8_t oldXStep;			//is the old position of the xStep is kept for resetting lcd
 		uint8_t oldYStep;		    //is the old position of the yStep is kept for resetting lcd
-		uint8_t bombXPos;
-		uint8_t bombYPos;
 		uint8_t stepsize;			/*is the size the Player is moving, this variable can be changed to every number between 1 - 24 if 0 there will be no movement,
 									with the only distriction being that 24 devided by stepsize cannot leave a remainder possible stepsize are:
 									1 - 2 - 3 - 4 - 6 - 8 - 12 - 24*/

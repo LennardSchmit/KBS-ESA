@@ -1,4 +1,3 @@
-#include "Bomb.h"
 #include <Wire.h>
 #include "Player_IR.h"
 #include <SPI.h>
@@ -14,19 +13,20 @@
 #include "irSend.h"
 #include "Timer_Display.h"
 #include "AfterGame.h"
+#include "SaveHighScore.h"
+#include "WatchHighScore.h"
+
 
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
 
-uint8_t gameStatus = 0;
+uint8_t gameStatus = 1;
 uint8_t levelSelect = 1;
 uint8_t OnehzCounter = 0;
 uint8_t gameTimer = 0;
 int highscore;
-volatile bool updateTime;
-volatile uint8_t updateStatus;
 
 uint8_t level1[9][11] ={
 	{3,0,0,0,0,0,0,0,0,0,0},
@@ -300,20 +300,15 @@ int main(void)
 	Touch touch(lcd);
 
   setTimer1();
-	IRs->sendByte(255);
-	Serial.begin(9600);
 
 	while(1)
 	{
-		if(gameStatus == 0)
-		{
+		if(gameStatus == 0)	{
 			Menu* menu = new Menu(lcd);
-			while(1)
-			{
+			while(1){
 				_delay_ms(10);
 				menu->Update();
-				if(menu->getStatus() != 0)
-				{
+				if(menu->getStatus() != 0){
 					gameStatus = menu->getStatus();
 					break;
 				}
@@ -321,14 +316,14 @@ int main(void)
 			delete menu;
 		}
 		
-		if(gameStatus == 1)
-		{ 
+		if(gameStatus == 1){ 
 			timer1 = new Timer_Display();
 			SelectLevel();
 			Player* playerNC = new Player_NC(MP, 2, NC, IRs);
 			Player* playerIR = new Player_IR(MP, 2, IRr);
-			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);
+			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);    
 			gameTimer = 1;
+
 			while(1){
 				IRs->bombToBuff(291);
 				IRs->bombToBuff(290);
@@ -339,11 +334,6 @@ int main(void)
 				}
 				
 				NC->ANupdate();
-				if(!(playerNC->getLife())){
-					break;
-				} //else if() check and update timer
-				gameField->updateBombs();				//update all bombs and check if there is an explosion happening
-				NC->ANupdate();							//get new nunchuck values
 				if(NC->getZButton()){
 					if(playerNC->getBomb()){
 						gameField->placeBombNC();
@@ -353,18 +343,14 @@ int main(void)
 					gameField->updateGameField_pl_nc();
 				}
 			}
-			delete MP;
-			delete gameField;
-			gameStatus = 3;
+			return 0;
 		}
-		if(gameStatus == 2)
-		{
+
+		if(gameStatus == 2){
 			OptionMenu* optMenu = new OptionMenu(lcd);
-			while(1)
-			{
+			while(1){
 				optMenu->Update();
-				if(optMenu->getStatus() != 2)
-				{
+				if(optMenu->getStatus() != 2){
 					gameStatus = optMenu->getStatus();
 					break;
 				}
@@ -435,19 +421,17 @@ void setTimer1()
   sei();             // enable all interrupts
 }
 
-ISR(TIMER1_OVF_vect)			//interrupt service routine that wraps a user defined function supplied by attachInterrupt
+ISR(TIMER1_OVF_vect)        // interrupt service routine that wraps a user defined function supplied by attachInterrupt
 {
-	TCNT1 = 65015;				//preload timer
-	updateStatus++;
-	if(updateStatus == 2){						//Player == 2, bomb == 4
-		OnehzCounter++;
-		if(OnehzCounter == 30){
-			OnehzCounter = 0;
-			if(gameStatus == 1){
-				if(timer1->nextSecond()){
-					gameStatus = 3;				//Game has Ended by the timer
-				}
-			}
-		}
-	}
+  TCNT1 = 65015;            // preload timer
+  OnehzCounter++;
+
+  if(OnehzCounter == 30){
+    OnehzCounter = 0;
+    if(gameStatus == 1){
+      if(timer1->nextSecond()){
+        gameStatus = 3; //Game has Ended by the timer
+      }
+    }
+  }
 }
