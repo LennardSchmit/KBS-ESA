@@ -23,7 +23,7 @@
 #define OFFSETX 48
 #define OFFSETY 13
 volatile uint8_t statusBombPlayer = 1;
-volatile uint8_t gameStatus = 1;
+volatile uint8_t gameStatus = 0;
 volatile boolean timerUpdate = false;
 uint8_t levelSelect = 1;
 uint8_t OnehzCounter = 0;
@@ -293,8 +293,6 @@ int main(void)
 	IRs->setCurByte(0);
 	IRs->setParity(0);
 	Serial.begin(9600);
-	IRs->toBuff(255);
-
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
 	WA = new WalkingAnimation(lcd);
@@ -320,15 +318,14 @@ int main(void)
 			SelectLevel();
 			Player* playerNC = new Player_NC(MP, 2, NC, IRs);
 			Player* playerIR = new Player_IR(MP, 2, IRr);
-			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);    
+			gameField = new GameField(lcd, MP, WA, IRr, IRs, playerNC, playerIR);    
 			gameTimer = 1;
 			setTimer1();
 			while(1){		
 				if(IRr->bombBuffAvail())
 				{
-					//Serial.println(IRr->bombFromBuff());
+					gameField->placeBombIR();
 				}
-
 				if(!(playerNC->getLife())){
 					break;
 				}
@@ -337,7 +334,7 @@ int main(void)
 						break; //Game has Ended by the timer
 					}
 					timerUpdate = false;
-				
+				}
 				if(IRr->buffAvail()){
 					playerIR->updatePlayer();
 					gameField->updateGameField_pl_ir();
@@ -397,19 +394,18 @@ int main(void)
 			delete HS;
 		}
 
-		if(gameStatus==5){
-		  WatchHighScore* WH = new WatchHighScore(lcd);
-
-		  while(1){
-			WH->Update();
-			if(WH->getStatus()!=5){
-			  gameStatus = WH->getStatus();
-			  break;
+		if(gameStatus == 5){
+			WatchHighScore* WH = new WatchHighScore(lcd);
+			while(1){
+				WH->Update();
+				if(WH->getStatus()!=5){
+					gameStatus = WH->getStatus();
+					break;
+				}
 			}
-		  }
-		  delete WH;
+			delete WH;
 		}
-	}
+
 	}
 }
 

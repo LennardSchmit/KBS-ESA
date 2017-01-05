@@ -13,6 +13,7 @@ class Bomb {
 		uint8_t getX();
 		uint8_t getY();
 		uint8_t getRange();
+		uint8_t getTime();
 		bool updatePlayer();
 									
 	private:

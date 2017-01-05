@@ -130,30 +130,21 @@ bool Player_NC::updatePlayer(){
 				status = 2;											//update status for communication
 			}
 		break;
-		
-	}
-	/**
-	Verzenden van bytes
-	uint8_t byteSend = 0;
-	if(status){
-		uint8_t sumStep = xStep + yStep;
-		Serial.println(sumStep);
-		if(xStep + yStep){
-			if(status == 4){
-			 status = 0;
-			}
-			byteSend = (status << 5);
-			byteSend += sumStep;
-			byteSend &= (1 << 7);
-		} else {
-			//send coords
-		}
-		Serial.println(byteSend);
-	}
-	**/
-	
+	}	
+
 	if(status){
 		statusZero = true;
+		uint16_t sendData = yPos;
+		sendData |= xPos << 4;
+		if(xStep){
+			sendData |= xStep/stepsize << 8;
+			sendData |= (1 << 9);
+			} else {
+			sendData |= yStep/stepsize << 8;
+			sendData &= ~(1 << 9);
+		}
+		sendData |= status << 13;
+		IRS->toBuff(sendData);
 		return true;
 	} else {
 		if(statusZero){

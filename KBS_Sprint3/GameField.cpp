@@ -15,12 +15,14 @@
 Bomb* bombs[14] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 
-GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, Player* pl_nc_g, Player* pl_ir_g){
+GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, irRecv* IRR_g, irSend* IRS_g, Player* pl_nc_g, Player* pl_ir_g){
 	lcd = lcd_g;
 	mp = mp_g;
+	WA = WA_g;
+	IRR = IRR_g;
+	IRS = IRS_g;
 	pl_nc = pl_nc_g;
 	pl_ir = pl_ir_g;
-	WA = WA_g;
 
 	for(int i = 0; i < 10; i++){
 		bombs[i] = NULL;
@@ -121,11 +123,16 @@ void GameField::placeBombNC(){
 	uint8_t bombY = pl_nc->getBombY();					//get location based on player location and offset do not use getter constant because off calculations
 	if(!(mp->getFieldValue(bombX, bombY) >= 5)){		//check if there is a bomb on that location
 		mp->setFieldValue(bombX, bombY, 5);				//place bomb so there is no possibility to place another bomb
-		
+		uint8_t curBombIndex = bombsIndex;
 		bombs[bombsIndex] = new Bomb(true, bombX, bombY, pl_nc->getBombRange());		//create new bomb for nunchuck player
 		bombsIndex++;																	//update index of bomb
 
-		pl_nc->minBomb();																//update player amount of bombs
+		pl_nc->minBomb();												//update player amount of bombs
+
+		uint16_t bombByte = bombY;
+		bombByte = bombX << 4;		
+		bombByte = bombs[curBombIndex]->getTime() << 8;
+		IRS->bombToBuff(bombByte);
 
 		lcd->fillRect(bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY, SIZE, SIZE, RED2);	//draw bomb
 		/************************************************************************/
@@ -143,7 +150,25 @@ void GameField::placeBombNC(){
 }
 
 void GameField::placeBombIR(){
-	//TODO	bombs[bombsIndex] = new Bomb(false, bombX, bombY, pl_nc->getBombRange());
+	uint16_t bombByte = IRR->bombFromBuff();
+	uint8_t bombX = (bombByte & (15 << 4)) >> 4;
+	uint8_t bombY = bombByte & (15 << 0);
+
+	bombs[bombsIndex] = new Bomb(false, bombX, bombY, pl_ir->getBombRange());
+
+	mp->setFieldValue(bombX, bombY, 5);
+
+	lcd->fillRect(bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY, SIZE, SIZE, RED2);	//draw bomb
+	/************************************************************************/
+	/* draw player so the player is visible after placement                 */
+	/************************************************************************/
+	switch(pl_nc->getStatus()){
+		case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+		case 1: WA->drawLeft	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+		case 2: WA->drawRight	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+		case 3: WA->drawUp		(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+		case 4: WA->drawDown	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+	}
 }
 
 void GameField::updateBombs(){

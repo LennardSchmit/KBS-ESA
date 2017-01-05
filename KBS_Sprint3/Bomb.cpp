@@ -8,7 +8,7 @@ Bomb::Bomb(bool thisPlayer_g, uint8_t x_g, uint8_t y_g, uint8_t range_g){
 	x = x_g;
 	y = y_g;
 	range = range_g;
-	time = 200;
+	time = 100;
 	thisPlayer = thisPlayer_g;
 }
 Bomb::~Bomb(){}
@@ -30,6 +30,9 @@ uint8_t Bomb::getY(){
 }
 uint8_t Bomb::getRange(){
 	return range;
+}
+uint8_t Bomb::getTime(){
+	return time;
 }
 bool Bomb::updatePlayer(){
 	return thisPlayer;
