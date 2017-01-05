@@ -13,6 +13,7 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
     lcd->fillRect(206, 30, 48, 64, BLACK);
     WA->drawBigStanding(76, 38, 1);
     WA->drawBigStanding(212, 38, 2);
+
     #ifdef P1
     //Buttons on the bottom of the screen
     lcd->fillRoundRect(35, 140, 250, 40, 10, BLACK);
@@ -20,7 +21,10 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
     lcd->fillRoundRect(35, 190, 250, 40, 10, BLACK);
     lcd->drawText(65, 205, "Back To Menu", RED, BLACK, 2);
     #endif
-    
+    #ifndef P1
+    lcd->fillRoundRect(35, 190, 250, 40, 10, BLACK);
+    lcd->drawText(65, 205, "Back To Menu", RED, BLACK, 2);
+    #endif
     //Select the winner
     if(playerOneScore>playerTwoScore){
       lcd->drawRect(68, 28, 52, 68, RED);
@@ -54,18 +58,22 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
 void AfterGame::Update(){
 	lcd->touchRead();
   if(lcd->touchZ()){
+    #ifdef P1
     if(lcd->touchX()>35 && lcd->touchX()<285 && lcd->touchY()>140 && lcd->touchY()<180)
-    {
+    { 
       lcd->fillRoundRect(35, 140, 250, 40, 10, RED);
       lcd->drawText(55, 155, "Save Highscore", BLACK, RED, 2);
       lcd->fillRoundRect(35, 190, 250, 40, 10, BLACK);
       lcd->drawText(65, 205, "Back To Menu", RED, BLACK, 2);
       status = 4;
     }
-    else if(lcd->touchX()>35 && lcd->touchX()<285 && lcd->touchY()>190 && lcd->touchY()<230)
+    #endif
+    if(lcd->touchX()>35 && lcd->touchX()<285 && lcd->touchY()>190 && lcd->touchY()<230)
     {
+      #ifdef P1
       lcd->fillRoundRect(35, 140, 250, 40, 10, BLACK);
       lcd->drawText(55, 155, "Save Highscore", RED, BLACK, 2);
+      #endif
       lcd->fillRoundRect(35, 190, 250, 40, 10, RED);
       lcd->drawText(65, 205, "Back To Menu", BLACK, RED, 2);
       status = 0;

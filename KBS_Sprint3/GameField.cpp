@@ -51,15 +51,25 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, irRecv
 
 				case 3:			//player (Nunchuck)
 					WA->drawStanding(leftcornerX + 6, leftcornerY + 4, 1);
-					pl_nc->setPosition(x, y);			//update player position so it is able to move
 					mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
+          #ifdef P1
+            pl_nc->setPosition(x, y);      //update player position so it is able to move
+          #endif
+          #ifndef P1
+            pl_ir->setPosition(x, y);      //update player position so it is able to move
+          #endif
 				break;
 
 				case 4:			//player (received by IRCOM)
-					//WA->drawStanding(leftcornerX + 6, leftcornerX + 4, 2);
-					lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, RED2);
-					pl_ir->setPosition(x, y);
+					WA->drawStanding(leftcornerX + 6, leftcornerX + 4, 2);
+					//lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, RED2);
 					mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
+          #ifdef P1
+            pl_ir->setPosition(x, y);      //update player position so it is able to move
+          #endif
+          #ifndef P1
+            pl_nc->setPosition(x, y);      //update player position so it is able to move
+          #endif
 				break;
 			}
 			leftcornerX = leftcornerX + SIZE;	//updates the leftcornerX for the next block so the next row can be filled
@@ -96,25 +106,36 @@ void GameField::updateGameField_pl_nc(){
 		lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
 	}
 
-	switch(pl_nc->getStatus()){
-		case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 1: WA->drawLeft	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 2: WA->drawRight	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 3: WA->drawUp		(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 4: WA->drawDown	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-	}
-	pl_nc->updatePos();		//update player so the old position is the current position
-}
+  drawIrPlayer();
+  drawNcPlayer();
+  pl_nc->updatePos();		//update player so the old position is the current position
+  }
 
 void GameField::updateGameField_pl_ir(){
-  
-  switch(pl_ir->getStatus()){
-    case 0: WA->drawStanding	(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
-    case 1: WA->drawLeft		(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
-    case 2: WA->drawRight		(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
-    case 3: WA->drawUp			(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
-    case 4: WA->drawDown		(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
+  if(pl_ir->getOldXStep()){
+    if(mp->getFieldValue((pl_ir->getOldXPos() + 1), pl_ir->getOldYPos()) == 0){
+      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETXSIZE, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, BLACK);
+    } else if(mp->getFieldValue(pl_ir->getOldXPos() + 1, pl_ir->getOldYPos()) >= 5){
+      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETXSIZE, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
+    }
   }
+
+  if(pl_ir->getOldYStep()){
+    if(mp->getFieldValue(pl_ir->getOldXPos(), (pl_ir->getOldYPos() + 1)) == 0){
+      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETYSIZE, SIZE, SIZE, BLACK);
+    } else if(mp->getFieldValue(pl_ir->getOldXPos(), (pl_ir->getOldYPos() + 1)) >= 5){
+      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETYSIZE, SIZE, SIZE, RED2);
+    }
+  }
+
+  if(mp->getFieldValue(pl_ir->getOldXPos(), pl_ir->getOldYPos()) == 0){
+    lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, BLACK);
+  } else if(mp->getFieldValue(pl_ir->getOldXPos(), pl_ir->getOldYPos()) >= 5){
+    lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
+  }
+
+  drawIrPlayer();
+  drawNcPlayer();
   pl_ir->updatePos();   //update player so the old position is the current position
 }
 
@@ -138,13 +159,9 @@ void GameField::placeBombNC(){
 		/************************************************************************/
 		/* draw player so the player is visible after placement                 */
 		/************************************************************************/
-		switch(pl_nc->getStatus()){
-			case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-			case 1: WA->drawLeft	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-			case 2: WA->drawRight	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-			case 3: WA->drawUp		(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-			case 4: WA->drawDown	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		}
+
+    drawIrPlayer();
+    drawNcPlayer();
 	}
 	
 }
@@ -162,13 +179,8 @@ void GameField::placeBombIR(){
 	/************************************************************************/
 	/* draw player so the player is visible after placement                 */
 	/************************************************************************/
-	switch(pl_nc->getStatus()){
-		case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 1: WA->drawLeft	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 2: WA->drawRight	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 3: WA->drawUp		(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-		case 4: WA->drawDown	(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
-	}
+  drawIrPlayer();
+  drawNcPlayer();
 }
 
 void GameField::updateBombs(){
@@ -198,6 +210,8 @@ void GameField::explodeBomb(uint8_t index){
 	//Serial.println("explodeBomb");
 	mp->setFieldValue(bombs[index]->getX(), bombs[index]->getY(), 0);
 	lcd->fillRect(bombs[index]->getX() * SIZE + OFFSETX, bombs[index]->getY() * SIZE + OFFSETY, SIZE, SIZE, BLACK);
+  drawIrPlayer();
+  drawNcPlayer();
 	pl_nc->checkExplosion(bombs[index]->getX(), bombs[index]->getY());
 
 	for(uint8_t dir = 1; dir < 5; dir++){					//loops through each direction to destroy all BACKGROUNDs in that direction
@@ -251,3 +265,46 @@ void GameField::explodeBomb(uint8_t index){
 		}
 	}
 }
+
+void GameField::drawNcPlayer(){
+  #ifdef P1
+    switch(pl_nc->getStatus()){
+      case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+      case 1: WA->drawLeft  (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+      case 2: WA->drawRight (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+      case 3: WA->drawUp    (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+      case 4: WA->drawDown  (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
+    }
+   #endif
+   #ifndef P1
+   switch(pl_nc->getStatus()){
+     case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 2); break;
+      case 1: WA->drawLeft  (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 2); break;
+      case 2: WA->drawRight (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 2); break;
+      case 3: WA->drawUp    (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 2); break;
+      case 4: WA->drawDown  (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 2); break;
+    }
+   #endif
+}
+
+void GameField::drawIrPlayer(){
+  #ifdef P1
+  switch(pl_ir->getStatus()){
+    case 0: WA->drawStanding(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
+    case 1: WA->drawLeft  (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
+    case 2: WA->drawRight (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
+    case 3: WA->drawUp    (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
+    case 4: WA->drawDown  (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
+  }
+  #endif
+  #ifndef P1
+  switch(pl_ir->getStatus()){
+    case 0: WA->drawStanding(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 1); break;
+    case 1: WA->drawLeft  (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 1); break;
+    case 2: WA->drawRight (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 1); break;
+    case 3: WA->drawUp    (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 1); break;
+    case 4: WA->drawDown  (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 1); break;
+  }
+  #endif
+}
+

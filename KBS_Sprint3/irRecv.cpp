@@ -116,7 +116,7 @@ void irRecv::bombToBuff(int inByte)
 	if(bombToIndex == BUFFER_LENGTH) bombToIndex--;
 }
 
-int irRecv::bombFromBuff()
+uint16_t irRecv::bombFromBuff()
 {
 	uint8_t bombIndex = bombFromIndex;
 	if(bombFromIndex < bombToIndex) bombFromIndex++;

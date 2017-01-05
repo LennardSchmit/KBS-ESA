@@ -27,4 +27,7 @@
 #define BACKGROUND    RGB( 116, 130, 143)      //1  this is the color for the blocks on the outside as well as the blocks that are undestroyable in the game
 #define BLACK   RGB(52, 54, 65)       //2 this is the color for the field you are standing on
 
+//#define DEBUGTIME
+//#define P1
+
 #endif /* COLOR_H_ */

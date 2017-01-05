@@ -138,10 +138,10 @@ bool Player_NC::updatePlayer(){
 		sendData |= xPos << 4;
 		if(xStep){
 			sendData |= xStep/stepsize << 8;
-			sendData |= (1 << 9);
+			sendData |= (1 << 12);
 			} else {
 			sendData |= yStep/stepsize << 8;
-			sendData &= ~(1 << 9);
+			sendData &= ~(1 << 12);
 		}
 		sendData |= status << 13;
 		IRS->toBuff(sendData);

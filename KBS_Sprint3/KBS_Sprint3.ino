@@ -6,28 +6,34 @@
 #include "GameField.h"
 #include "NunchukLibrary.h"
 #include "Player_NC.h"
-#include "Menu.h"
-#include "OptionMenu.h"
-#include "Touch.h"
 #include "irRecv.h"
 #include "irSend.h"
-#include "Timer_Display.h"
 #include "AfterGame.h"
-#include "SaveHighScore.h"
-#include "WatchHighScore.h"
+#include "Color.h"
 
-//#define DEBUGTIME
+#ifdef P1
+  #include "Menu.h"
+  #include "SaveHighScore.h"
+  #include "WatchHighScore.h"
+   #include "OptionMenu.h"
+  #include "Touch.h"
+  #include "Timer_Display.h"
+  
+  volatile uint8_t gameStatus = 0;
+  volatile boolean timerUpdate = false;
+  uint8_t OnehzCounter = 0;
+#endif
+
+#ifndef P1
+  volatile uint8_t gameStatus = 6;
+#endif
 
 #define ADDRESS 0x52
-#define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
+#define SIZE 24                  //is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
 volatile uint8_t statusBombPlayer = 1;
-volatile uint8_t gameStatus = 0;
-volatile boolean timerUpdate = false;
 uint8_t levelSelect = 1;
-uint8_t OnehzCounter = 0;
-uint8_t gameTimer = 0;
 int highscore;
 
 uint8_t level1[9][11] ={
@@ -43,15 +49,15 @@ uint8_t level1[9][11] ={
 };
 
 uint8_t level2[9][11] = {
-  {3,0,2,2,0,0,0,0,0,2,0},
-  {0,1,2,1,0,1,2,1,0,1,2},
-  {0,0,0,0,0,0,2,2,0,0,0},
-  {0,1,2,1,2,1,2,1,2,1,0},
-  {0,0,2,2,0,2,2,2,0,0,0},
-  {0,1,2,1,2,1,2,1,0,1,2},
-  {0,0,0,2,2,2,0,0,0,2,2},
-  {0,1,2,1,2,1,0,1,2,1,2},
-  {0,0,0,0,0,0,0,0,0,0,4}
+  {3,0,2,2,2,2,2,2,2,2,2},
+  {0,1,2,1,2,1,2,1,2,1,2},
+  {2,2,2,2,2,2,2,2,2,2,2},
+  {2,1,2,1,2,1,2,1,2,1,2},
+  {2,2,2,2,2,2,2,2,2,2,2},
+  {2,1,2,1,2,1,2,1,2,1,2},
+  {2,2,2,2,2,2,2,2,2,2,2},
+  {2,1,2,1,2,1,2,1,2,1,0},
+  {2,2,2,2,2,2,2,2,2,0,4}
 };
 
 Map* MP;
@@ -61,15 +67,16 @@ GameField* gameField;
 WalkingAnimation* WA;
 irSend *IRs = new irSend();
 irRecv *IRr = new irRecv();
+#ifdef P1
 Timer_Display* timer1;
-
+#endif
 //Verzenden IR
 ISR(TIMER2_COMPB_vect)
 {
 	IRr->setCount(IRr->getCount()+1); //Counter voor het ontvangen.
 	IRs->setCount(IRs->getCount()+1); // Counter voor het verzenden.
 
-	if(IRs->getBitSend() == 1 && IRs->getCount() == 13) //Zorg voor +-350 us tussentijd en zet daarna het 38 khz signaal weer op de pin
+	if(IRs->getBitSend() == 1 && IRs->getCount() == 13) //Zorg voor +-350(13) us tussentijd en zet daarna het 38 khz signaal weer op de pin
 	{
 		if(IRs->getStart()) DDRD |= (1 << PORTD3); //Het enablen van het signaal op de pin
 		IRs->setBitSend(0); //Aangeven dat er een bit verzonden mag worden
@@ -292,14 +299,17 @@ int main(void)
 	IRs->setBitCount(0);
 	IRs->setCurByte(0);
 	IRs->setParity(0);
-	Serial.begin(9600);
+  Serial.begin(9600);
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
 	WA = new WalkingAnimation(lcd);
 	lcd->begin();
-	Touch touch(lcd);
+	#ifdef P1
+  Touch touch(lcd);
+  #endif
 	while(1)
 	{
+    #ifdef P1
 		if(gameStatus == 0)	{
 			Menu* menu = new Menu(lcd);
 			while(1){
@@ -312,29 +322,34 @@ int main(void)
 			}
 			delete menu;
 		}
-		
+		#endif
 		if(gameStatus == 1){ 
+      #ifdef P1
 			timer1 = new Timer_Display();
+      setTimer1();
+      #endif
 			SelectLevel();
 			Player* playerNC = new Player_NC(MP, 2, NC, IRs);
 			Player* playerIR = new Player_IR(MP, 2, IRr);
 			gameField = new GameField(lcd, MP, WA, IRr, IRs, playerNC, playerIR);    
-			gameTimer = 1;
-			setTimer1();
+      
 			while(1){		
 				if(IRr->bombBuffAvail())
 				{
 					gameField->placeBombIR();
+          Serial.println(IRr->bombFromBuff());
 				}
 				if(!(playerNC->getLife())){
 					break;
 				}
+        #ifdef P1
 				if(timerUpdate){
 					if(timer1->nextSecond()){
 						break; //Game has Ended by the timer
 					}
 					timerUpdate = false;
 				}
+        #endif
 				if(IRr->buffAvail()){
 					playerIR->updatePlayer();
 					gameField->updateGameField_pl_ir();
@@ -355,7 +370,8 @@ int main(void)
 			delete gameField;
 			gameStatus = 3;
 		}
-
+   
+    #ifdef P1
 		if(gameStatus == 2){
 			OptionMenu* optMenu = new OptionMenu(lcd);
 			while(1){
@@ -368,27 +384,29 @@ int main(void)
 			levelSelect = optMenu->getSelectedLevel();
 			delete optMenu;
 		}
-
+    #endif
+  
 		if(gameStatus == 3){
 		  AfterGame* AG = new AfterGame(lcd, WA, 2000, 300);
 		  while(1){
-			AG->Update();
-			if(AG->getStatus()!=3){
-			  gameStatus = AG->getStatus();
-			  break;
-			}
+  			AG->Update();
+  			if(AG->getStatus()!=3){
+  			  gameStatus = AG->getStatus();
+  			  break;
+  			}
 		  }
 		  highscore = AG->getHighScore();
 		  delete AG;
 		}
-    
+   
+    #ifdef P1
 		if(gameStatus == 4){
 			SaveHighScore* HS = new SaveHighScore(lcd, highscore);
 			while(1){
 			  HS->Update();
 			  if(HS->getStatus()!=4){
-				gameStatus = HS->getStatus();
-				break;
+  				gameStatus = HS->getStatus();
+  				break;
 			  }
 			}
 			delete HS;
@@ -405,7 +423,18 @@ int main(void)
 			}
 			delete WH;
 		}
+    #endif
 
+    #ifndef P1
+    if(gameStatus==6){
+      lcd->fillScreen(BACKGROUND);
+      lcd->drawText(50, 20, "BOMBERMAN", RED, BACKGROUND, 3);
+      lcd->drawText(20, 150, "Please wait for player 1", RED, BACKGROUND, 2);
+      _delay_ms(2000);
+      gameStatus = 1;
+    }
+    #endif
+    
 	}
 }
 
@@ -418,6 +447,7 @@ void SelectLevel(){
   }
 }
 
+#ifdef P1
 void setTimer1()
 {
   // TIMER 1 for interrupt frequency 1 Hz:
@@ -440,3 +470,4 @@ ISR(TIMER1_COMPA_vect)        // interrupt service routine that wraps a user def
 {
 	timerUpdate = true;
 }
+#endif

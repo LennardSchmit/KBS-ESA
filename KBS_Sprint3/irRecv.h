@@ -32,7 +32,7 @@ class irRecv
 		uint8_t getParity();
 		void setParity(int);
 		void bombToBuff(int);
-		int bombFromBuff();
+		uint16_t bombFromBuff();
 		bool bombBuffAvail();
 		void remainingToBuff(int);
 		int remainingFromBuff();

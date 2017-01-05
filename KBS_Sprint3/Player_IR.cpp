@@ -13,11 +13,11 @@ bool Player_IR::updatePlayer(){
 	yPos = recByte & (15 << 0);
 	xPos = (recByte & (15 << 4)) >> 4;
 	if(recByte & (1 << 12)){
-		xStep = (recByte & (15 << 8)) >> 8;
+		xStep = ((recByte & (15 << 8)) >> 8) * stepsize;
 		yStep = 0;
 	} else {
 		xStep = 0;
-		yStep = (recByte & (15 << 8)) >> 8;
+		yStep = ((recByte & (15 << 8)) >> 8) * stepsize;
 	}
 	status = (recByte & (7 << 13)) >> 13;
 }
