@@ -11,6 +11,24 @@ WatchHighScore::WatchHighScore(MI0283QT9* lcd_g){
     Scores[i][0]=Scores[i][1]=Scores[i][2] = 45;
     Scores[i][3]=Scores[i][4]=0;
   }
+  /*
+  for(int i = 0; i < ((EEPROM.size/5)-30); i++){
+    boolean done = false;
+    int j = i*5 - 30;
+    uint8_t byte1 = EEPROM.read(j+3);
+    uint8_t byte2 = EEPROM.read(j+4);
+    if(EEPROM.read(j)!=255){
+      for(uint8_t p = 0; p < 10; p++){
+        if(!done){
+          if((((Scores[p][3] << 8) & 0xFFFF) + ((Scores[p][4]) & 0xFF)) < (((byte1 << 8) & 0xFFFF) + ((byte2) & 0xFF))){
+            Scores[p
+          }
+        }
+      }
+    }
+  }
+  */
+  
   for(uint8_t i = 0; i < 10; i++){
     if(EEPROM.read((i*5)+30)!=255){
       Scores[i][0] = EEPROM.read((i*5)+30);

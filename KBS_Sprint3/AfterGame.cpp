@@ -13,13 +13,14 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
     lcd->fillRect(206, 30, 48, 64, BLACK);
     WA->drawBigStanding(76, 38, 1);
     WA->drawBigStanding(212, 38, 2);
-    
+    #ifdef P1
     //Buttons on the bottom of the screen
     lcd->fillRoundRect(35, 140, 250, 40, 10, BLACK);
     lcd->drawText(55, 155, "Save Highscore", RED, BLACK, 2);
     lcd->fillRoundRect(35, 190, 250, 40, 10, BLACK);
     lcd->drawText(65, 205, "Back To Menu", RED, BLACK, 2);
-
+    #endif
+    
     //Select the winner
     if(playerOneScore>playerTwoScore){
       lcd->drawRect(68, 28, 52, 68, RED);
