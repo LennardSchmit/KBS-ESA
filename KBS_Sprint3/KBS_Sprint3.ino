@@ -328,6 +328,7 @@ int main(void)
 				{
 					//Serial.println(IRr->bombFromBuff());
 				}
+
 				if(!(playerNC->getLife())){
 					break;
 				}
@@ -336,11 +337,16 @@ int main(void)
 						break; //Game has Ended by the timer
 					}
 					timerUpdate = false;
+				
+				if(IRr->buffAvail()){
+					playerIR->updatePlayer();
+					gameField->updateGameField_pl_ir();
 				}
 				NC->ANupdate();
 				if(playerNC->updatePlayer()){
 					gameField->updateGameField_pl_nc();
 				}
+
 				if(NC->getZButton()){
 					if(playerNC->getBomb()){
 						gameField->placeBombNC();
@@ -403,6 +409,7 @@ int main(void)
 		  }
 		  delete WH;
 		}
+	}
 	}
 }
 

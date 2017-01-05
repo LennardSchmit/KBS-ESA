@@ -105,7 +105,7 @@ void GameField::updateGameField_pl_nc(){
 }
 
 void GameField::updateGameField_pl_ir(){
-  lcd->fillRect(pl_ir->getOldXPx() + OFFSETX, pl_ir->getOldYPx() + OFFSETY, SIZE, SIZE, BLACK); //draw background
+  
   switch(pl_ir->getStatus()){
     case 0: WA->drawStanding	(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
     case 1: WA->drawLeft		(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;

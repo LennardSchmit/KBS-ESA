@@ -144,13 +144,6 @@ bool Player::checkExplosion(uint8_t x, uint8_t y){
 			}
 		}
 	}
-	/*
-	if(yStep == 0 && (xPos == x && xStep <= HALFSIZE) || (xPos - 1 == x, && xStep >= HALFSIZE)){
-		
-	} else if(yPos == y)
-	if(x == bombXPos && y == bombYPos){
-		life--;
-	}*/
 }
 void Player::toString(){
 // 	Serial.println("Player");
