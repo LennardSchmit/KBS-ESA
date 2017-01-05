@@ -9,7 +9,7 @@
 
 class irRecv
 {
-	#define BUFFER_LENGTH 32
+	#define BUFFER_LENGTH 4
 
 	public:
 		irRecv();

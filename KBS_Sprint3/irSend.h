@@ -8,7 +8,7 @@
 class irSend
 {
 
-	#define BUFFER_LENGTH 32
+	#define BUFFER_LENGTH 4
 
 	public:
 		irSend();
