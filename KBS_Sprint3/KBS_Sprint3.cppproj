@@ -54,7 +54,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106011</Value>
+      <Value>ARDUINO=106013</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -95,7 +95,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106011</Value>
+      <Value>ARDUINO=106013</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -136,7 +136,7 @@
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Users/Rick/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../../KBS_Sprint3;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility;C:/Users/Rick/Documents/Arduino/libraries/digitalWriteFast;C:/Users/Rick/Documents/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src;C:/Program Files (x86)/Arduino/libraries/MI0283QT9;C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility;C:/Users/D.Hergaarden/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast;C:/Program Files (x86)/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility;C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility;C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers;C:/Users/Rick/Documents/Arduino/libraries/digitalWriteFast/utility;C:/Users/Rick/Documents/Arduino/libraries/GraphicsLib/utility;C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/1yshlmvw.s1z/Micro Platforms/default/debuggers;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.upload.port>COM9</arduino.upload.port>
+        <arduino.upload.port>COM8</arduino.upload.port>
       </VisualMicroSettings>
     </VisualMicroSettings>
   </PropertyGroup>
@@ -154,7 +154,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106011</Value>
+      <Value>ARDUINO=106013</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -195,7 +195,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106011</Value>
+      <Value>ARDUINO=106013</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -236,7 +236,7 @@
     <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Users/Rick/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard;../../../KBS_Sprint3;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9;C:/Users/Rick/Documents/Arduino/libraries/MI0283QT9/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility;C:/Users/Rick/Documents/Arduino/libraries/digitalWriteFast;C:/Users/Rick/Documents/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src;C:/Program Files (x86)/Arduino/libraries/MI0283QT9;C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility;C:/Users/D.Hergaarden/Documents/Arduino/libraries;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast;C:/Program Files (x86)/Arduino/libraries/GraphicsLib;C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility;C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility;C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers;C:/Users/Rick/Documents/Arduino/libraries/digitalWriteFast/utility;C:/Users/Rick/Documents/Arduino/libraries/GraphicsLib/utility;C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/1yshlmvw.s1z/Micro Platforms/default/debuggers;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.upload.port>COM9</arduino.upload.port>
+        <arduino.upload.port>COM8</arduino.upload.port>
       </VisualMicroSettings>
     </VisualMicroSettings>
   </PropertyGroup>

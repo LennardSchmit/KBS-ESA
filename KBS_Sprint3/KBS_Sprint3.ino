@@ -16,13 +16,15 @@
 #include "SaveHighScore.h"
 #include "WatchHighScore.h"
 
+//#define DEBUGTIME
 
 #define ADDRESS 0x52
 #define SIZE 24									//is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
 #define OFFSETY 13
-
-uint8_t gameStatus = 1;
+volatile uint8_t statusBombPlayer = 1;
+volatile uint8_t gameStatus = 1;
+volatile boolean timerUpdate = false;
 uint8_t levelSelect = 1;
 uint8_t OnehzCounter = 0;
 uint8_t gameTimer = 0;
@@ -298,9 +300,6 @@ int main(void)
 	WA = new WalkingAnimation(lcd);
 	lcd->begin();
 	Touch touch(lcd);
-
-  setTimer1();
-
 	while(1)
 	{
 		if(gameStatus == 0)	{
@@ -323,24 +322,50 @@ int main(void)
 			Player* playerIR = new Player_IR(MP, 2, IRr);
 			gameField = new GameField(lcd, MP, WA, playerNC, playerIR);    
 			gameTimer = 1;
-			while(1){		
+			setTimer1();
+			while(1){
+				/*		
 				if(IRr->bombBuffAvail())
 				{
 					//Serial.println(IRr->bombFromBuff());
 				}
+				*//*
 				if(!(playerNC->getLife())){
 					break;
-				}
-				gameField->updateBombs();	
-				NC->ANupdate();
-				if(NC->getZButton()){
-					if(playerNC->getBomb()){
-						gameField->placeBombNC();
+				}*/
+				#ifdef DEBUGTIME
+					Serial.println("while");
+					Serial.print("sBP\t");
+					Serial.println(statusBombPlayer);
+				#endif
+				if(statusBombPlayer == 1){
+					#ifdef DEBUGTIME
+						Serial.print("1");
+					#endif
+					if(timerUpdate){
+						if(timer1->nextSecond()){
+							break; //Game has Ended by the timer
+						}
+						timerUpdate = false;
 					}
+					NC->ANupdate();
+					if(playerNC->updatePlayer()){
+						gameField->updateGameField_pl_nc();
+					}
+					if(NC->getZButton()){
+						if(playerNC->getBomb()){
+							gameField->placeBombNC();
+						}
+					}
+					statusBombPlayer++;
 				}
-				if(playerNC->updatePlayer()){
-					gameField->updateGameField_pl_nc();
-				}
+				else if(statusBombPlayer == 3){
+					#ifdef DEBUGTIME
+						Serial.println("3");
+					#endif
+					gameField->updateBombs();
+					statusBombPlayer++;
+				}	
 			}
 			delete MP;
 			delete gameField;
@@ -374,7 +399,7 @@ int main(void)
 		  delete AG;
 		}
     
-		if(gameStatus==4){
+		if(gameStatus == 4){
 			SaveHighScore* HS = new SaveHighScore(lcd, highscore);
 			while(1){
 			  HS->Update();
@@ -413,27 +438,65 @@ void SelectLevel(){
 void setTimer1()
 {
   // initialize timer1 
-  cli();           // disable all interrupts
-  TCCR1A = 0;
-  TCCR1B = 0;
+  //60 HZ
+  /*
+	cli(); // stop interrupts
+	TCCR1A = 0; // set entire TCCR1A register to 0
+	TCCR1B = 0; // same for TCCR1B
+	TCNT1  = 0; // initialize counter value to 0
+	// set compare match register for 60.00060000600006 Hz increments
+	OCR1A = 33332; // = 16000000 / (8 * 60.00060000600006) - 1 (must be <65536)
+	// turn on CTC mode
+	TCCR1B |= (1 << WGM12);
+	// Set CS12, CS11 and CS10 bits for 8 prescaler
+	TCCR1B |= (0 << CS12) | (1 << CS11) | (0 << CS10);
+	// enable timer compare interrupt
+	TIMSK1 |= (1 << OCIE1A);
+	sei(); // allow interrupts
+	*/
+	//10 hz
+	cli(); // stop interrupts
+	TCCR1A = 0; // set entire TCCR1A register to 0
+	TCCR1B = 0; // same for TCCR1B
+	TCNT1  = 0; // initialize counter value to 0
+	// set compare match register for 10 Hz increments
+	OCR1A = 24999; // = 16000000 / (64 * 10) - 1 (must be <65536)
+	// turn on CTC mode
+	TCCR1B |= (1 << WGM12);
+	// Set CS12, CS11 and CS10 bits for 64 prescaler
+	TCCR1B |= (0 << CS12) | (1 << CS11) | (1 << CS10);
+	// enable timer compare interrupt
+	TIMSK1 |= (1 << OCIE1A);
+	sei(); // allow interrupts
 
-  TCNT1 = 65015;            // preload timer 65536-16MHz/256/2Hz
-  TCCR1B |= (1 << CS12)|(0 << CS11)|(1 << CS10);    // 256 prescaler 
-  TIMSK1 |= (1 << TOIE1);   // enable timer overflow interrupt
-  sei();             // enable all interrupts
 }
 
-ISR(TIMER1_OVF_vect)        // interrupt service routine that wraps a user defined function supplied by attachInterrupt
+ISR(TIMER1_COMPA_vect)        // interrupt service routine that wraps a user defined function supplied by attachInterrupt
 {
-  TCNT1 = 65015;            // preload timer
-  OnehzCounter++;
-
-  if(OnehzCounter == 30){
-    OnehzCounter = 0;
-    if(gameStatus == 1){
-      if(timer1->nextSecond()){
-        gameStatus = 3; //Game has Ended by the timer
-      }
-    }
-  }
+	#ifdef DEBUGTIME
+		Serial.println("Vect");
+		Serial.print("sBP\t");
+		Serial.println(statusBombPlayer);
+	#endif
+	if(statusBombPlayer == 2){
+		#ifdef DEBUGTIME
+			Serial.println("2");
+		#endif
+		statusBombPlayer++;
+	} else if(statusBombPlayer == 4){
+		#ifdef DEBUGTIME
+  			Serial.println("4");
+		#endif
+		OnehzCounter++;
+		if(OnehzCounter == 2){
+			OnehzCounter = 0;
+			if(gameStatus == 1){
+				timerUpdate = true;
+			}
+		}
+		statusBombPlayer = 1;
+	} else {
+		Serial.println("Timer1 else\t");
+		Serial.println(statusBombPlayer);
+	}
 }
