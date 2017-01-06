@@ -438,12 +438,13 @@ int main(void)
     if(gameStatus==6){
       lcd->fillScreen(BACKGROUND);
       lcd->drawText(50, 20, "BOMBERMAN", RED, BACKGROUND, 3);
-      lcd->drawText(20, 150, "Please Wait", RED, BACKGROUND, 2);
-      lcd->drawText(20, 180, "For Player One", RED, BACKGROUND, 2);
+      lcd->drawText(50, 150, "Please Wait", RED, BACKGROUND, 2);
+      lcd->drawText(50, 180, "For Player One", RED, BACKGROUND, 2);
       
       while(1){
+        _delay_ms(10);
         if(IRr->remainingBuffAvail()){
-          if(IRr->remainingFromBuff()==0){
+          if(IRr->remainingFromBuff()==15){
             gameStatus=1;
             break;
           }
