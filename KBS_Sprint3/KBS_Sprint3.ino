@@ -446,6 +446,8 @@ int main(void)
         if(IRr->remainingBuffAvail()){
           if(IRr->remainingFromBuff()==15){
             gameStatus=1;
+            IRr->remainingFromBuff();
+            IRr->remainingFromBuff();
             break;
           }
         }
