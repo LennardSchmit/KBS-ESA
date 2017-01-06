@@ -8,11 +8,12 @@ class Timer_Display{
 	Timer_Display();
 	bool nextSecond();
 	void shiftOut();
+  uint8_t getTimeLeft();
 
 	private:
 	void displayDigits();
 	uint8_t time[2];		
-	
+  
 	uint8_t digit_code[11] = //contains the 7 segment byte value
 	{
 		0b01101111,

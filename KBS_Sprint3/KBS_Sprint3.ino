@@ -377,7 +377,12 @@ int main(void)
 			}
 			delete MP;
 			delete gameField;
+      #ifdef P1
 			gameStatus = 3;
+      #endif
+      #ifndef P1
+      gameStatus = 6;
+      #endif
 		}
    
     #ifdef P1
@@ -394,9 +399,17 @@ int main(void)
 			delete optMenu;
 		}
     #endif
-  
+    
+    #ifdef P1
 		if(gameStatus == 3){
-		  AfterGame* AG = new AfterGame(lcd, WA, 2000, 300);
+      int greenPlayerScore = (playerNC->getTotalBlocksDestroyed()*25) + (playerNC->getLife()*1250) + (timer1->getTimeLeft()*25);
+      int redPlayerScore   = (playerIR->getTotalBlocksDestroyed()*25) + (playerIR->getLife()*1250) + (timer1->getTimeLeft()*25);
+		  if(greenPlayerScore<redPlayerScore){
+        redPlayerScore+=2500;
+		  } else if(greenPlayerScore>redPlayerScore){
+        greenPlayerScore+=2500;
+		  }
+		  AfterGame* AG = new AfterGame(lcd, WA, greenPlayerScore, redPlayerScore);
 		  while(1){
   			AG->Update();
   			if(AG->getStatus()!=3){
@@ -407,6 +420,7 @@ int main(void)
 		  highscore = AG->getHighScore();
 		  delete AG;
 		}
+    #endif
    
     #ifdef P1
 		if(gameStatus == 4){

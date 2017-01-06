@@ -49,3 +49,8 @@ void Timer_Display::shiftOut()
 	}
 	PORTC |=  (1 << PORTC3);							//enable bit shift register output
 }
+
+uint8_t Timer_Display::getTimeLeft(){
+  return (time[0]*10 + time[1]);
+}
+
