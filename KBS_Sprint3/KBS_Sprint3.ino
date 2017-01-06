@@ -121,7 +121,7 @@ ISR(TIMER2_COMPB_vect)
 		IRs->setStart(1);
 	}
 	
-	if(IRs->getCount() == 68 && !(IRs->getStart()) && IRs->getCurByte() && (IRs->getSBuf() == 1)) //Het verzenden van een startbit voor de remaining buffer
+	if(IRs->getCount() == 102 && !(IRs->getStart()) && IRs->getCurByte() && (IRs->getSBuf() == 1)) //Het verzenden van een startbit voor de remaining buffer
 	{
 		DDRD &= ~(1 << PORTD3);
 		IRs->setCount(0);
@@ -129,7 +129,7 @@ ISR(TIMER2_COMPB_vect)
 		IRs->setStart(1);
 	}
 
-	if(IRs->getCount() == 57 && !(IRs->getStart()) && IRs->getCurByte() && (IRs->getSBuf() == 2)) //Het verzenden van een startbit voor de bombbuffer
+	if(IRs->getCount() == 68 && !(IRs->getStart()) && IRs->getCurByte() && (IRs->getSBuf() == 2)) //Het verzenden van een startbit voor de bombbuffer
 	{
 		DDRD &= ~(1 << PORTD3);
 		IRs->setCount(0);
@@ -274,13 +274,13 @@ ISR (INT0_vect)
 			IRr->setSBuf(0);
 		}
 
-		if((IRr->getBitTime() >=55) && (IRr->getBitTime() <= 61)) //Wanneer een startbit voor de bommenbuffer ontvangen is.
+		if((IRr->getBitTime() >=65) && (IRr->getBitTime() <= 71)) //Wanneer een startbit voor de bommenbuffer ontvangen is.
 		{
 			IRr->setStart((IRr->getStart() + 1));
 			IRr->setSBuf(2);
 		}
 
-		if((IRr->getBitTime() >=65) && (IRr->getBitTime() <= 71)) //Wanneer een startbit voor de remainingbuffer ontvangen is.
+		if((IRr->getBitTime() >=98) && (IRr->getBitTime() <= 105)) //Wanneer een startbit voor de remainingbuffer ontvangen is.
 		{			
 			IRr->setSBuf(1);
 			IRr->setStart((IRr->getStart() + 1));		
