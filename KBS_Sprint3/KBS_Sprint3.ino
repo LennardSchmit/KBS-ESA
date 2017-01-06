@@ -84,7 +84,7 @@ ISR(TIMER2_COMPB_vect)
 		IRs->setCount(0); //De counter op 0 zetten
 	}
 
-	if((IRs->getCount() == 136) && !(IRs->getBitSend()) && !(IRs->getCurByte())) //Wanneer er geen bits verzonden worden, toch IR signaal blijven verzenden
+	if((IRs->getCount() == 200) && !(IRs->getBitSend()) && !(IRs->getCurByte())) //Wanneer er geen bits verzonden worden, toch IR signaal blijven verzenden
 	{
 		DDRD ^= (1 << PORTD3); //38 khz signaal enablen disablen
 		IRs->setBitSend(1); // aangeven dat er een bit verzonden, zodat de bovenstaande if 350us wacht tussen de bits.
