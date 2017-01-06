@@ -27,7 +27,7 @@
 	volatile uint8_t gameStatus = 6;
 #endif
 #ifdef P1
-	volatile uint8_t gameStatus = 1;
+	volatile uint8_t gameStatus = 0;
 #endif
 #define ADDRESS 0x52
 #define SIZE 24                  //is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
