@@ -27,7 +27,7 @@
 	volatile uint8_t gameStatus = 6;
 #endif
 #ifdef P1
-	volatile uint8_t gameStatus = 1;
+	volatile uint8_t gameStatus = 0;
 #endif
 #define ADDRESS 0x52
 #define SIZE 24                  //is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
@@ -84,7 +84,7 @@ ISR(TIMER2_COMPB_vect)
 		IRs->setCount(0); //De counter op 0 zetten
 	}
 
-	if((IRs->getCount() == 10) && !(IRs->getBitSend()) && !(IRs->getCurByte())) //Wanneer er geen bits verzonden worden, toch IR signaal blijven verzenden
+	if((IRs->getCount() == 136) && !(IRs->getBitSend()) && !(IRs->getCurByte())) //Wanneer er geen bits verzonden worden, toch IR signaal blijven verzenden
 	{
 		DDRD ^= (1 << PORTD3); //38 khz signaal enablen disablen
 		IRs->setBitSend(1); // aangeven dat er een bit verzonden, zodat de bovenstaande if 350us wacht tussen de bits.
@@ -328,20 +328,25 @@ int main(void)
 		#endif
 		if(gameStatus == 1){ 
       #ifdef P1
-      IRs->remainingToBuff(0);
 			timer1 = new Timer_Display();
-      setTimer1();
+			setTimer1();
+			_delay_ms(10);
+			IRs->remainingToBuff(15);
+			_delay_ms(10);
+			_delay_ms(10);
+			IRs->remainingToBuff(15);
+			_delay_ms(10);
+
       #endif
 			SelectLevel();
 			Player* playerNC = new Player_NC(MP, 2, NC, IRs);
 			Player* playerIR = new Player_IR(MP, 2, IRr);
 			gameField = new GameField(lcd, MP, WA, IRr, IRs, playerNC, playerIR);    
       
-			while(1){		
+			while(1){	
 				if(IRr->bombBuffAvail())
 				{
 					gameField->placeBombIR();
-          Serial.println(IRr->bombFromBuff());
 				}
 				if(!(playerNC->getLife())){
 					break;
