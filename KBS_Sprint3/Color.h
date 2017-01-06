@@ -1,6 +1,8 @@
 #ifndef COLOR_H_
 #define COLOR_H_
 
+#define P1
+
 //Colors for drawing players
 #define PLAYERBLACK   RGB(32, 32, 32)     //1     3
 #define GREEN1  RGB(96, 208, 80)    //2
@@ -28,6 +30,5 @@
 #define BLACK   RGB(52, 54, 65)       //2 this is the color for the field you are standing on
 
 //#define DEBUGTIME
-//#define P1
 
 #endif /* COLOR_H_ */

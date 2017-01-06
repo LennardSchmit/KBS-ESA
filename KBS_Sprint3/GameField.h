@@ -19,8 +19,9 @@ class GameField {
 	private:
 		void updateBombArray(uint8_t index);
 		void explodeBomb(uint8_t index);
-    void drawIrPlayer();
-    void drawNcPlayer();
+		void drawIrPlayer();
+		void drawNcPlayer();
+		void drawBlock(uint8_t x, uint8_t y, uint16_t xPos, uint16_t yPos);
 		uint8_t bombsIndex;
 		MI0283QT9* lcd;
 		Map* mp;

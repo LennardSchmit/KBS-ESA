@@ -19,15 +19,16 @@
   #include "Touch.h"
   #include "Timer_Display.h"
   
-  volatile uint8_t gameStatus = 0;
   volatile boolean timerUpdate = false;
   uint8_t OnehzCounter = 0;
 #endif
 
 #ifndef P1
-  volatile uint8_t gameStatus = 6;
+	volatile uint8_t gameStatus = 1;
 #endif
-
+#ifdef P1
+	volatile uint8_t gameStatus = 1;
+#endif
 #define ADDRESS 0x52
 #define SIZE 24                  //is the amount of pixels of on block the game has 9 (y) by 11 (x) blocks and is 216 by 264 px.
 #define OFFSETX 48
@@ -304,9 +305,11 @@ int main(void)
 	NC = new NunchukLibrary();
 	WA = new WalkingAnimation(lcd);
 	lcd->begin();
+
 	#ifdef P1
-  Touch touch(lcd);
-  #endif
+		Touch touch(lcd);
+	#endif
+
 	while(1)
 	{
     #ifdef P1

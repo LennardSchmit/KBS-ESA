@@ -84,58 +84,33 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, irRecv
 /************************************************************************/
 void GameField::updateGameField_pl_nc(){
 
-	if(pl_nc->getOldXStep()){
-		if(mp->getFieldValue((pl_nc->getOldXPos() + 1), pl_nc->getOldYPos()) == 0){
-			lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETXSIZE, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, BLACK);
-		} else if(mp->getFieldValue(pl_nc->getOldXPos() + 1, pl_nc->getOldYPos()) >= 5){
-			lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETXSIZE, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
-		}
-	}
-
-	if(pl_nc->getOldYStep()){
-		if(mp->getFieldValue(pl_nc->getOldXPos(), (pl_nc->getOldYPos() + 1)) == 0){
-			lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETYSIZE, SIZE, SIZE, BLACK);
-		} else if(mp->getFieldValue(pl_nc->getOldXPos(), (pl_nc->getOldYPos() + 1)) >= 5){
-			lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETYSIZE, SIZE, SIZE, RED2);
-		}
-	}
-
-	if(mp->getFieldValue(pl_nc->getOldXPos(), pl_nc->getOldYPos()) == 0){
-		lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, BLACK);
-	} else if(mp->getFieldValue(pl_nc->getOldXPos(), pl_nc->getOldYPos()) >= 5){
-		lcd->fillRect(pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
-	}
+  if(pl_nc->getOldXStep()){
+	  drawBlock((pl_nc->getOldXPos() + 1), pl_nc->getOldYPos(), pl_nc->getOldXPosPx() + OFFSETXSIZE, pl_nc->getOldYPosPx() + OFFSETY);
+  }
+  if(pl_nc->getOldYStep()){
+	  drawBlock(pl_nc->getOldXPos(), (pl_nc->getOldYPos() + 1), pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETYSIZE);
+  }
+  drawBlock(pl_nc->getOldXPos(), pl_nc->getOldYPos(), pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY);
 
   drawIrPlayer();
   drawNcPlayer();
+
   pl_nc->updatePos();		//update player so the old position is the current position
   }
 
 void GameField::updateGameField_pl_ir(){
+
   if(pl_ir->getOldXStep()){
-    if(mp->getFieldValue((pl_ir->getOldXPos() + 1), pl_ir->getOldYPos()) == 0){
-      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETXSIZE, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, BLACK);
-    } else if(mp->getFieldValue(pl_ir->getOldXPos() + 1, pl_ir->getOldYPos()) >= 5){
-      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETXSIZE, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
-    }
+	drawBlock((pl_ir->getOldXPos() + 1), pl_ir->getOldYPos(), pl_ir->getOldXPosPx() + OFFSETXSIZE, pl_ir->getOldYPosPx() + OFFSETY);
   }
-
   if(pl_ir->getOldYStep()){
-    if(mp->getFieldValue(pl_ir->getOldXPos(), (pl_ir->getOldYPos() + 1)) == 0){
-      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETYSIZE, SIZE, SIZE, BLACK);
-    } else if(mp->getFieldValue(pl_ir->getOldXPos(), (pl_ir->getOldYPos() + 1)) >= 5){
-      lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETYSIZE, SIZE, SIZE, RED2);
-    }
+	drawBlock(pl_ir->getOldXPos(), (pl_ir->getOldYPos() + 1), pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETYSIZE);
   }
-
-  if(mp->getFieldValue(pl_ir->getOldXPos(), pl_ir->getOldYPos()) == 0){
-    lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, BLACK);
-  } else if(mp->getFieldValue(pl_ir->getOldXPos(), pl_ir->getOldYPos()) >= 5){
-    lcd->fillRect(pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY, SIZE, SIZE, RED2);
-  }
+  drawBlock(pl_ir->getOldXPos(), pl_ir->getOldYPos(), pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY);
 
   drawIrPlayer();
   drawNcPlayer();
+
   pl_ir->updatePos();   //update player so the old position is the current position
 }
 
@@ -155,7 +130,8 @@ void GameField::placeBombNC(){
 		bombByte = bombs[curBombIndex]->getTime() << 8;
 		IRS->bombToBuff(bombByte);
 
-		lcd->fillRect(bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY, SIZE, SIZE, RED2);	//draw bomb
+		//lcd->fillRect(bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY, SIZE, SIZE, RED2);	//draw bomb
+		drawBlock(bombX, bombY, bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY);
 		/************************************************************************/
 		/* draw player so the player is visible after placement                 */
 		/************************************************************************/
@@ -172,10 +148,10 @@ void GameField::placeBombIR(){
 	uint8_t bombY = bombByte & (15 << 0);
 
 	bombs[bombsIndex] = new Bomb(false, bombX, bombY, pl_ir->getBombRange());
+	bombsIndex++;
 
 	mp->setFieldValue(bombX, bombY, 5);
-
-	lcd->fillRect(bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY, SIZE, SIZE, RED2);	//draw bomb
+	drawBlock(bombX, bombY, bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY);
 	/************************************************************************/
 	/* draw player so the player is visible after placement                 */
 	/************************************************************************/
@@ -252,8 +228,8 @@ void GameField::explodeBomb(uint8_t index){
 				// 				Serial.println("wall-break");
 				break;
 				} else if(fieldValue == 2) {
-				mp->setFieldValue(explosionX, explosionY, 0);
-				lcd->fillRect(explosionX * SIZE + OFFSETX, explosionY * SIZE + OFFSETY, SIZE, SIZE, BLACK);
+					mp->setFieldValue(explosionX, explosionY, 0);
+					lcd->fillRect(explosionX * SIZE + OFFSETX, explosionY * SIZE + OFFSETY, SIZE, SIZE, BLACK);
 				// 				Serial.println("BACKGROUND destroyed break");
 				break;
 				} else if(fieldValue >= 5) {
@@ -306,5 +282,27 @@ void GameField::drawIrPlayer(){
     case 4: WA->drawDown  (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 1); break;
   }
   #endif
+}
+
+void GameField::drawBlock(uint8_t x, uint8_t y, uint16_t xPx, uint16_t yPx){
+	switch(mp->getFieldValue(x, y)){
+		case 0:			//void
+			lcd->fillRect(xPx, yPx, SIZE, SIZE, BLACK);
+		break;
+
+		case 1:			//undestroyable block
+			WA->drawBlock(xPx, yPx, 1);
+			//lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, BACKGROUND);
+		break;
+
+		case 2:			//destroyable block
+			WA->drawBlock(xPx, yPx, 0);
+			//lcd->fillRect(leftcornerX, leftcornerY, SIZE, SIZE, RED);
+		break;
+
+		case 5:			//Bomb
+			lcd->fillRect(xPx, yPx, SIZE, SIZE, RED);
+		break;
+	}
 }
 
