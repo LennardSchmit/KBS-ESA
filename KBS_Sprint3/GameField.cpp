@@ -52,12 +52,15 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, irRecv
 				case 3:			//player (Nunchuck)
 					WA->drawStanding(leftcornerX + 6, leftcornerY + 4, 1);
 					mp->setFieldValue(x,y,0);			//update map so the place the player is standing on is 0 needed for updating lcd
-          #ifdef P1
-            pl_nc->setPosition(x, y);      //update player position so it is able to move
-          #endif
-          #ifndef P1
-            pl_ir->setPosition(x, y);      //update player position so it is able to move
-          #endif
+					#ifdef P1
+						pl_nc->setPosition(x, y);      //update player position so it is able to move
+					#endif
+					#ifndef P1
+						pl_ir->setPosition(x, y);      //update player position so it is able to move
+					#endif
+
+					lcd->drawInteger(4, 4, pl_nc->getLife(), 10, RED, BACKGROUND, 2);
+
 				break;
 
 				case 4:			//player (received by IRCOM)
@@ -186,8 +189,10 @@ void GameField::explodeBomb(uint8_t index){
 	//Serial.println("explodeBomb");
 	mp->setFieldValue(bombs[index]->getX(), bombs[index]->getY(), 0);
 	lcd->fillRect(bombs[index]->getX() * SIZE + OFFSETX, bombs[index]->getY() * SIZE + OFFSETY, SIZE, SIZE, BLACK);
-  drawIrPlayer();
-  drawNcPlayer();
+
+	drawIrPlayer();
+	drawNcPlayer();
+
 	pl_nc->checkExplosion(bombs[index]->getX(), bombs[index]->getY());
 
 	for(uint8_t dir = 1; dir < 5; dir++){					//loops through each direction to destroy all BACKGROUNDs in that direction
@@ -237,7 +242,9 @@ void GameField::explodeBomb(uint8_t index){
 				// 				Serial.println("another Bomb");
 			}
 
-			pl_nc->checkExplosion(explosionX, explosionY);
+			if(pl_nc->checkExplosion(explosionX, explosionY)){
+				lcd->drawInteger(4, 4, pl_nc->getLife(), 10, RED, BACKGROUND, 2);
+			}
 		}
 	}
 }
@@ -304,9 +311,9 @@ void GameField::drawBlock(uint8_t x, uint8_t y, uint16_t xPx, uint16_t yPx){
 			lcd->fillRect(xPx, yPx, SIZE, SIZE, RED);
 		break;
 
-    case 6:
-      lcd->fillRect(xPx, yPx, SIZE, SIZE, BACKGROUND);
-    break;
+		case 6:
+			lcd->fillRect(xPx, yPx, SIZE, SIZE, BACKGROUND);
+		break;
 	}
 }
 
