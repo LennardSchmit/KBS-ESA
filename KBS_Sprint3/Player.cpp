@@ -106,44 +106,37 @@ void Player::minLife(){
 // 	Serial.println(life);
 }
 bool Player::checkExplosion(uint8_t x, uint8_t y){
-// 	Serial.println("checkExplosion");
-// 	Serial.print("x:\t");
-// 	Serial.print(x);
-// 	Serial.print("y:\t");
-// 	Serial.println(y);	
-// 	toString();
 	if(!invinsibility){
 		if(yStep + xStep == 0){
-			/*Serial.println("no Offset");*/
 			if(x == xPos){
-				/*Serial.println("X ECQ");*/
 				if(y == yPos){
-// 					Serial.println("Y ECQ");
 					minLife();
+					return true;
 				}
 			}
 		} else if(xStep == 0){
-// 			Serial.println("Y OFFSET");
 			if(x == xPos){
-// 				Serial.println("X ECQ");
 				if(yPos == y && yStep <= HALFSIZE){
 					minLife();
+					return true;
 				} else if((yPos == (y - 1)) && (yStep >= HALFSIZE)){
 					minLife();
+					return true;
 				}
 			}
 		} else if(yStep == 0){
-// 			Serial.println("X OFFSET");
 			if(y == yPos){
-// 				Serial.println("Y ECQ");
 				if(xPos == x && xStep <= HALFSIZE){
 					minLife();
+					return true;
 					} else if((xPos == (x - 1)) && (xStep >= HALFSIZE)){
 					minLife();
+					return true;
 				}
 			}
 		}
 	}
+	return false;
 }
 void Player::toString(){
 // 	Serial.println("Player");
