@@ -192,9 +192,10 @@ void GameField::explodeBomb(uint8_t index){
 
 	drawIrPlayer();
 	drawNcPlayer();
-
-	pl_nc->checkExplosion(bombs[index]->getX(), bombs[index]->getY());
-
+	uint8_t blocksDestroyed = 0;
+	if(pl_nc->checkExplosion(bombs[index]->getX(), bombs[index]->getY())){
+		lcd->drawInteger(4, 4, pl_nc->getLife(), 10, RED, BACKGROUND, 2);
+	}
 	for(uint8_t dir = 1; dir < 5; dir++){					//loops through each direction to destroy all BACKGROUNDs in that direction
 		for(uint8_t explodeoffset = 1; explodeoffset <= bombs[index]->getRange(); explodeoffset++){			//checks every BACKGROUND from offset 1 to explode range for every direction in above for
 			uint8_t explosionX;
@@ -228,12 +229,12 @@ void GameField::explodeBomb(uint8_t index){
 
 
 			uint8_t fieldValue = mp->getFieldValue(explosionX, explosionY);
-			if (fieldValue == 1)
-			{
+				if (fieldValue == 1){
 				// 				Serial.println("wall-break");
 				break;
 				} else if(fieldValue == 2) {
 					mp->setFieldValue(explosionX, explosionY, 0);
+					blocksDestroyed++;
 					lcd->fillRect(explosionX * SIZE + OFFSETX, explosionY * SIZE + OFFSETY, SIZE, SIZE, BLACK);
 				// 				Serial.println("BACKGROUND destroyed break");
 				break;
@@ -246,6 +247,9 @@ void GameField::explodeBomb(uint8_t index){
 				lcd->drawInteger(4, 4, pl_nc->getLife(), 10, RED, BACKGROUND, 2);
 			}
 		}
+	}
+	if(bombs[index]->updatePlayer()){	
+		pl_nc->updateTotalBlocksDestroyed(blocksDestroyed);
 	}
 }
 

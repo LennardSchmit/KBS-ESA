@@ -31,6 +31,8 @@ class Player{
 		uint8_t getBomb();
 		void minBomb();
 		void plusBomb();
+		void updateTotalBlocksDestroyed(uint16_t);
+		uint16_t getTotalBlocksDestroyed();
 		uint8_t getBombX();
 		uint8_t getBombY();		
 		uint8_t getBombRange();
@@ -47,6 +49,8 @@ class Player{
 		bool statusZero;
 		uint8_t bombs;
 		uint8_t bombRange;
+		uint16_t totalBombsPlaced;
+		uint16_t totalBlocksDestroyed;
 		uint8_t invinsibility;
 		uint8_t life;
 		uint8_t xPos;				//Position on the X axis range 0 - 10	

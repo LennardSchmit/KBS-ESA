@@ -68,15 +68,21 @@ uint8_t Player::getBomb(){
 	return bombs;
 }
 void Player::minBomb(){
-	//Serial.println("--");
 	bombs--;
-	//Serial.println(bombs);
+	totalBombsPlaced++;
 }
 void Player::plusBomb(){
-	//Serial.println("++");
 	bombs++;
-	//Serial.println(bombs);
 }
+
+void Player::updateTotalBlocksDestroyed(uint16_t destruction){
+	totalBlocksDestroyed += destruction;
+}
+
+uint16_t Player::getTotalBlocksDestroyed(){
+	return totalBlocksDestroyed;
+}
+
 uint8_t Player::getBombX(){
 	if(xStep >= 12){
 		return xPos + 1;
@@ -95,15 +101,11 @@ uint8_t Player::getBombRange(){
 	return bombRange;
 }
 uint8_t Player::getLife(){
-// 	Serial.print("life:  ");
-// 	Serial.println(life);
 	return life;
 }
 void Player::minLife(){
 	life--;
 	invinsibility = 60;
-// 	Serial.print("Ga DOOD:  ");
-// 	Serial.println(life);
 }
 bool Player::checkExplosion(uint8_t x, uint8_t y){
 	if(!invinsibility){
