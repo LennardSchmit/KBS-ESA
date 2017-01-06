@@ -16,7 +16,7 @@ Map::Map(uint8_t level_g[9][11]){
 
 uint8_t Map::getFieldValue(uint8_t x, uint8_t y){
   if(y == 9 || x == 11){			//this can be replaced by enlarging the Map with one row and one column
-    return 1;						//it is placed to ensure the player does not move out of the game field
+    return 6;						//it is placed to ensure the player does not move out of the game field
   } else{
     return field[y][x];
   }

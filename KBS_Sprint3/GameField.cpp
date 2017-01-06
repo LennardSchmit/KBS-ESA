@@ -303,6 +303,10 @@ void GameField::drawBlock(uint8_t x, uint8_t y, uint16_t xPx, uint16_t yPx){
 		case 5:			//Bomb
 			lcd->fillRect(xPx, yPx, SIZE, SIZE, RED);
 		break;
+
+    case 6:
+      lcd->fillRect(xPx, yPx, SIZE, SIZE, BACKGROUND);
+    break;
 	}
 }
 

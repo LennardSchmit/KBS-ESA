@@ -24,7 +24,7 @@
 #endif
 
 #ifndef P1
-	volatile uint8_t gameStatus = 1;
+	volatile uint8_t gameStatus = 6;
 #endif
 #ifdef P1
 	volatile uint8_t gameStatus = 1;
@@ -328,6 +328,7 @@ int main(void)
 		#endif
 		if(gameStatus == 1){ 
       #ifdef P1
+      IRs->remainingToBuff(0);
 			timer1 = new Timer_Display();
       setTimer1();
       #endif
@@ -432,12 +433,19 @@ int main(void)
     if(gameStatus==6){
       lcd->fillScreen(BACKGROUND);
       lcd->drawText(50, 20, "BOMBERMAN", RED, BACKGROUND, 3);
-      lcd->drawText(20, 150, "Please wait for player 1", RED, BACKGROUND, 2);
-      _delay_ms(2000);
-      gameStatus = 1;
+      lcd->drawText(20, 150, "Please Wait", RED, BACKGROUND, 2);
+      lcd->drawText(20, 180, "For Player One", RED, BACKGROUND, 2);
+      
+      while(1){
+        if(IRr->remainingBuffAvail()){
+          if(IRr->remainingFromBuff()==0){
+            gameStatus=1;
+            break;
+          }
+        }
+      }
     }
     #endif
-    
 	}
 }
 
