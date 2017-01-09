@@ -129,8 +129,8 @@ void GameField::placeBombNC(){
 		pl_nc->minBomb();												//update player amount of bombs
 
 		uint16_t bombByte = bombY;
-		bombByte = bombX << 4;		
-		bombByte = bombs[curBombIndex]->getTime() << 8;
+		bombByte |= bombX << 4;		
+		bombByte |= bombs[curBombIndex]->getTime() << 8;
 		IRS->bombToBuff(bombByte);
 
 		//lcd->fillRect(bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY, SIZE, SIZE, RED2);	//draw bomb
