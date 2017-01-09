@@ -10,9 +10,10 @@
 #include "irSend.h"
 #include "AfterGame.h"
 #include "Color.h"
+#include "Menu.h"
 
 #ifdef P1
-  #include "Menu.h"
+ #include "Menu.h"
   #include "SaveHighScore.h"
   #include "WatchHighScore.h"
    #include "OptionMenu.h"
@@ -294,6 +295,17 @@ ISR (INT0_vect)
 	}
 }
 
+void SelectLevel()
+{
+	//levelSelect = getSelectedLevel()
+	switch(levelSelect){
+		case 1:    MP = new Map(level1); break;
+		case 2:    MP = new Map(level2); break;
+		default:   MP = new Map(level1); break;
+	}
+}
+
+
 int main(void)
 {
 	IRs->setStart(0);
@@ -473,15 +485,6 @@ int main(void)
     }
     #endif
 	}
-}
-
-void SelectLevel(){
-  //levelSelect = getSelectedLevel()
-  switch(levelSelect){
-    case 1:    MP = new Map(level1); break;
-    case 2:    MP = new Map(level2); break;
-    default:   MP = new Map(level1); break;
-  }
 }
 
 #ifdef P1
