@@ -304,6 +304,8 @@ int main(void)
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
 	WA = new WalkingAnimation(lcd);
+  Player* playerNC;
+  Player* playerIR;
 	lcd->begin();
 
 	#ifdef P1
@@ -339,8 +341,8 @@ int main(void)
 
       #endif
 			SelectLevel();
-			Player* playerNC = new Player_NC(MP, 2, NC, IRs);
-			Player* playerIR = new Player_IR(MP, 2, IRr);
+			playerNC = new Player_NC(MP, 2, NC, IRs);
+			playerIR = new Player_IR(MP, 2, IRr);
 			gameField = new GameField(lcd, MP, WA, IRr, IRs, playerNC, playerIR);    
       
 			while(1){	
@@ -402,6 +404,8 @@ int main(void)
     
     #ifdef P1
 		if(gameStatus == 3){
+      Serial.println(playerNC->getTotalBlocksDestroyed());
+      Serial.println(timer1->getTimeLeft()*25);
       int greenPlayerScore = (playerNC->getTotalBlocksDestroyed()*25) + (playerNC->getLife()*1250) + (timer1->getTimeLeft()*25);
       int redPlayerScore   = (playerIR->getTotalBlocksDestroyed()*25) + (playerIR->getLife()*1250) + (timer1->getTimeLeft()*25);
 		  if(greenPlayerScore<redPlayerScore){
