@@ -482,16 +482,26 @@ int main(void)
     if(gameStatus==6){
       lcd->fillScreen(BACKGROUND);
       lcd->drawText(50, 20, "BOMBERMAN", RED, BACKGROUND, 3);
-      lcd->drawText(50, 150, "Please Wait", RED, BACKGROUND, 2);
-      lcd->drawText(50, 180, "For Player One", RED, BACKGROUND, 2);
+      lcd->drawText(20, 100, "Please Wait For Player One", RED, BACKGROUND, 2);
+      lcd->drawText(50, 130, "Ore Press Button", RED, BACKGROUND, 2);
+      lcd->fillRoundRect(60, 190, 200, 40, 10, BLACK);
+      lcd->drawText(80, 205, "Start Game", RED, BLACK, 2);
       
       while(1){
-        _delay_ms(10);
         if(IRr->remainingBuffAvail()){
           if(IRr->remainingFromBuff()==15){
             gameStatus=1;
             IRr->remainingFromBuff();
             IRr->remainingFromBuff();
+            break;
+          }
+        }
+        lcd->touchRead();
+        if(lcd->touchZ()){
+          if(lcd->touchY()>190 && lcd->touchY()<230 && lcd->touchX()>60 && lcd->touchX()<260){
+            lcd->fillRoundRect(60, 190, 200, 40, 10, RED);
+            lcd->drawText(80, 205, "Start Game", BLACK, RED, 2);
+            gameStatus = 1;
             break;
           }
         }
