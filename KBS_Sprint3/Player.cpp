@@ -140,14 +140,3 @@ bool Player::checkExplosion(uint8_t x, uint8_t y){
 	}
 	return false;
 }
-void Player::toString(){
-// 	Serial.println("Player");
-// 	Serial.print("xPos:\t");
-// 	Serial.print(xPos);
-// 	Serial.print("\tyPos:\t");
-// 	Serial.println(yPos);
-// 	Serial.print("xStep:\t");
-// 	Serial.print(xStep);
-// 	Serial.print("\tyStep:\t");
-// 	Serial.println(yStep);
-}

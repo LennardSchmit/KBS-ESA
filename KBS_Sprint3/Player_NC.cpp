@@ -133,25 +133,25 @@ bool Player_NC::updatePlayer(){
 	}	
 
 	if(status){
-		statusZero = true;
-		uint16_t sendData = yPos;
-		sendData |= xPos << 4;
-		if(xStep){
-			sendData |= xStep/stepsize << 8;
-			sendData |= (1 << 12);
-			} else {
-			sendData |= yStep/stepsize << 8;
-			sendData &= ~(1 << 12);
+		statusZero = true;											//sets true so the player will be drawn on the first time that status == 0
+		uint16_t sendData = yPos;									//is the byte for IR with byte 0 - 3 as the y position
+		sendData |= xPos << 4;										//sets the IR byte 4 - 7 with the x position
+		if(xStep){													//checks if the offset is on the x axis
+			sendData |= xStep/stepsize << 8;						//if offset is on x axis the x offset will be set on the 8 - 11 bit of the data
+			sendData |= (1 << 12);									//12 bit is set to high so the player ir knows that the offset is on the x axis
+		} else {
+			sendData |= yStep/stepsize << 8;						//if offset is on y axis the y offset will be set on the 8 - 11 bit of the data
+			sendData &= ~(1 << 12);									//12 bit is set to low so the player ir knows that the offset is on the x axis
 		}
-		sendData |= status << 13;
-		IRS->toBuff(sendData);
+		sendData |= status << 13;									//the status is the direction the player was going and is set right now it isn't used but could be handy if you were debugging
+		IRS->toBuff(sendData);										//send data
 		return true;
 	} else {
-		if(statusZero){
-			statusZero = false;
-			return true;
+		if(statusZero){												//if player isn't drawn standing still
+			statusZero = false;										//sets statusZero so the player will not be redrawn
+			return true;											//return true because the player has to be redrawn
 		} else {
-			return false;
+			return false;											//return false becaus the player is already drawn
 		}
 	}	
 	//is return true if the players position has been updated

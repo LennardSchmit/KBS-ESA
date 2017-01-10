@@ -87,15 +87,15 @@ GameField::GameField(MI0283QT9* lcd_g, Map* mp_g, WalkingAnimation* WA_g, irRecv
 /************************************************************************/
 void GameField::updateGameField_pl_nc(){
 
-  if(pl_nc->getOldXStep()){
+  if(pl_nc->getOldXStep()){				//if player has an offset on the x axis 2 blocks on the x axis have to be redrawn
 	  drawBlock((pl_nc->getOldXPos() + 1), pl_nc->getOldYPos(), pl_nc->getOldXPosPx() + OFFSETXSIZE, pl_nc->getOldYPosPx() + OFFSETY);
   }
-  if(pl_nc->getOldYStep()){
+  if(pl_nc->getOldYStep()){				//if player has an offset on the y axis 2 blocks on the y axis have to be redrawn
 	  drawBlock(pl_nc->getOldXPos(), (pl_nc->getOldYPos() + 1), pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETYSIZE);
   }
   drawBlock(pl_nc->getOldXPos(), pl_nc->getOldYPos(), pl_nc->getOldXPosPx() + OFFSETX, pl_nc->getOldYPosPx() + OFFSETY);
 
-  drawIrPlayer();
+  drawIrPlayer();						//draw ir player first so the nunchuk player will be on top at anytime
   drawNcPlayer();
 
   pl_nc->updatePos();		//update player so the old position is the current position
@@ -103,16 +103,16 @@ void GameField::updateGameField_pl_nc(){
 
 void GameField::updateGameField_pl_ir(){
 
-  if(pl_ir->getOldXStep()){
+  if(pl_ir->getOldXStep()){				//if player has an offset on the x axis 2 blocks on the x axis have to be redrawn
 	drawBlock((pl_ir->getOldXPos() + 1), pl_ir->getOldYPos(), pl_ir->getOldXPosPx() + OFFSETXSIZE, pl_ir->getOldYPosPx() + OFFSETY);
   }
-  if(pl_ir->getOldYStep()){
+  if(pl_ir->getOldYStep()){				//if player has an offset on the y axis 2 blocks on the y axis have to be redrawn
 	drawBlock(pl_ir->getOldXPos(), (pl_ir->getOldYPos() + 1), pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETYSIZE);
   }
   drawBlock(pl_ir->getOldXPos(), pl_ir->getOldYPos(), pl_ir->getOldXPosPx() + OFFSETX, pl_ir->getOldYPosPx() + OFFSETY);
 
-  drawIrPlayer();
-  drawNcPlayer();
+  drawIrPlayer();						//draw ir player first so the nunchuk player will be on top at anytime
+  drawNcPlayer();						
 
   pl_ir->updatePos();   //update player so the old position is the current position
 }
@@ -128,7 +128,7 @@ void GameField::placeBombNC(){
 
 		pl_nc->minBomb();												//update player amount of bombs
 
-		uint16_t bombByte = bombY;
+		uint16_t bombByte = bombY										//prepare the byte send for the bomb
 		bombByte |= bombX << 4;		
 		bombByte |= bombs[curBombIndex]->getTime() << 8;
 		IRS->bombToBuff(bombByte);
@@ -139,26 +139,27 @@ void GameField::placeBombNC(){
 		/* draw player so the player is visible after placement                 */
 		/************************************************************************/
 
-    drawIrPlayer();
+	
+    drawIrPlayer();				//draw ir player first so the nunchuk player will be on top at anytime
     drawNcPlayer();
 	}
 	
 }
 
 void GameField::placeBombIR(){
-	uint16_t bombByte = IRR->bombFromBuff();
-	uint8_t bombX = (bombByte & (15 << 4)) >> 4;
-	uint8_t bombY = bombByte & (15 << 0);
+	uint16_t bombByte = IRR->bombFromBuff();			
+	uint8_t bombX = (bombByte & (15 << 4)) >> 4;		//get x position of the bomb
+	uint8_t bombY = bombByte & (15 << 0);				//get y position of the bomb
 
-	bombs[bombsIndex] = new Bomb(false, bombX, bombY, pl_ir->getBombRange());
-	bombsIndex++;
+	bombs[bombsIndex] = new Bomb(false, bombX, bombY, pl_ir->getBombRange());		//generate new bomb that isn't owned by the nunchuk player
+	bombsIndex++;																	//add bomb to index
 
-	mp->setFieldValue(bombX, bombY, 5);
-	drawBlock(bombX, bombY, bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY);
+	mp->setFieldValue(bombX, bombY, 5);												//set field value to bomb
+	drawBlock(bombX, bombY, bombX * SIZE + OFFSETX, bombY * SIZE + OFFSETY);		//draw the bomb
 	/************************************************************************/
 	/* draw player so the player is visible after placement                 */
 	/************************************************************************/
-  drawIrPlayer();
+  drawIrPlayer();				//draw ir player first so the nunchuk player will be on top at anytime
   drawNcPlayer();
 }
 
@@ -254,7 +255,7 @@ void GameField::explodeBomb(uint8_t index){
 }
 
 void GameField::drawNcPlayer(){
-  #ifdef P1
+  #ifdef P1						//draw player controlled based on the version the player has to be red or green
     switch(pl_nc->getStatus()){
       case 0: WA->drawStanding(pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
       case 1: WA->drawLeft  (pl_nc->getXPx() + OFFSETXPLAYER, pl_nc->getYPx() + OFFSETYPLAYER, 1); break;
@@ -275,7 +276,7 @@ void GameField::drawNcPlayer(){
 }
 
 void GameField::drawIrPlayer(){
-  #ifdef P1
+  #ifdef P1					//draw player controlled based on the version the player has to be red or green
   switch(pl_ir->getStatus()){
     case 0: WA->drawStanding(pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
     case 1: WA->drawLeft  (pl_ir->getXPx() + OFFSETXPLAYER, pl_ir->getYPx() + OFFSETYPLAYER, 2); break;
@@ -296,6 +297,7 @@ void GameField::drawIrPlayer(){
 }
 
 void GameField::drawBlock(uint8_t x, uint8_t y, uint16_t xPx, uint16_t yPx){
+	//draws block based on the value in the Map given are the x and y position used for map and the pixel positions those could be calculated
 	switch(mp->getFieldValue(x, y)){
 		case 0:			//void
 			lcd->fillRect(xPx, yPx, SIZE, SIZE, BLACK);
