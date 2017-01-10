@@ -21,27 +21,28 @@ void irSend::setCount(int newCount)
 	count = newCount;
 }
 
-void irSend::toBuff(int inByte)
+//Hieronder staat de buffer voor de player informatie. Elke andere buffer in het verzenden en ontvangen werkt op dezelfde manier.
+void irSend::toBuff(int inByte) //functie om iets in de buffer te zetten. 
 {
-	buffer[toIndex] = inByte;
-	toIndex++;
-	if(toIndex == BUFFER_LENGTH) toIndex--;
+	buffer[toIndex] = inByte; //Hetgene dat in de buffer komt wordt op de plaats van de huidige index gezet.
+	toIndex++; //De index wordt elke keer opgehoogt. 
+	if(toIndex == BUFFER_LENGTH) toIndex--; //Als de buffer zijn maximale lengte bereikt heeft wordt de index niet meer opgehoogd.
 }
 
-int irSend::fromBuff()
+int irSend::fromBuff() //Functie om gegevens uit de buffer te halen
 {
-	uint8_t index = fromIndex;
-	if(fromIndex < toIndex) fromIndex++;
-	else
+	uint8_t index = fromIndex; //De fromindex houdt bij waar de buffer is met lezen.
+	if(fromIndex < toIndex) fromIndex++; //Zolang de fromindex niet hoger is als de toindex. Dus niet verder gaat dan dat in de buffer staat
+	else //Wannneer dat wel zo is, wordt de buffer gereset.
 	{
 		fromIndex = 0;
 		toIndex = 0;
 		index = 0;
 	}
-	return buffer[index];
+	return buffer[index]; //De return komt op het laatst omdat anders de functie afgelopen is. Daarom wordt de variabele index gebruikt.
 }
 
-bool irSend::buffAvail()
+bool irSend::buffAvail() //Geeft aan of de buffer gelezen kan worden. 
 {
 	return toIndex;
 }
