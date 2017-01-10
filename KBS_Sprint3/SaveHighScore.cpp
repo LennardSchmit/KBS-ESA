@@ -6,9 +6,12 @@
 SaveHighScore::SaveHighScore(MI0283QT9* lcd_g, int highscore_g){
 	lcd = lcd_g;
 	highscore = highscore_g;
-  
+
+  //De letters zijn standaard I I I omdat de I in het midden van het alfabet zit.
   letterOne = letterTwo = letterThree = 73;
   press = false;
+  
+  //Teken het scherm
 	lcd->fillScreen(BACKGROUND);
   lcd->fillRect(34, 46, 32, 30, BLACK);
   lcd->fillRect(84, 46, 32, 30, BLACK);
@@ -100,6 +103,7 @@ void SaveHighScore::Update(){
   }
 }
 
+//Hier wordt de highscore opgeslagen in EEPROM
 void SaveHighScore::SaveScore(){
   int addr = 30;
   uint8_t byte1 = ((highscore>>8) & 0xFF);

@@ -28,7 +28,7 @@ WatchHighScore::WatchHighScore(MI0283QT9* lcd_g){
     }
   }
   */
-  
+  //Lees de waarden uit EEPROM en gooi ze in een array
   for(uint8_t i = 0; i < 10; i++){
     if(EEPROM.read((i*5)+30)!=255){
       Scores[i][0] = EEPROM.read((i*5)+30);
@@ -38,7 +38,7 @@ WatchHighScore::WatchHighScore(MI0283QT9* lcd_g){
       Scores[i][4] = EEPROM.read((i*5)+30 + 4);
     }
   }
-  
+  //Sorteer de array op grootte van de score
   char iTempOne = 0;
   char iTempTwo = 0;
   for (int i = 0; i < 10; i++)
@@ -59,6 +59,7 @@ WatchHighScore::WatchHighScore(MI0283QT9* lcd_g){
       }
     }
   }
+  //Print vervolgens de scores
   lcd->fillScreen(BACKGROUND);
  
   lcd->fillRect(5, 5, 310, 165, BLACK);

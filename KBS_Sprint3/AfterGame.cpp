@@ -50,6 +50,7 @@ AfterGame::AfterGame(MI0283QT9* lcd_g, WalkingAnimation* WA_g, int playerOneScor
     }
 }
 
+//Update kijkt of er een knop ingedrukt wordt
 void AfterGame::Update(){
 	lcd->touchRead();
   if(lcd->touchZ()){

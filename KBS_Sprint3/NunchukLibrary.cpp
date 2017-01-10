@@ -19,7 +19,7 @@ NunchukLibrary::NunchukLibrary(){
   beginPossY = analogY;
 }
 
-//Send data throug i2c
+//Verstuur data via I2C
 void NunchukLibrary::AN_sendByte(uint8_t data, uint8_t location)
 {
   Wire.beginTransmission(ADDRESS);
@@ -32,7 +32,7 @@ void NunchukLibrary::AN_sendByte(uint8_t data, uint8_t location)
   _delay_ms(10);
 }
 
-//Update the values of the nunchuk
+//Werk de waarden van de nuchuk bij
 uint8_t NunchukLibrary::ANupdate()
 {
   int count = 0;
@@ -45,7 +45,7 @@ uint8_t NunchukLibrary::ANupdate()
     values[count] = Wire.read();
     count++;
   }
-//Put the values in variables
+//Stop de waarden in variabels
   analogX = values[0];
   analogY = values[1];
   //accelX = (values[2] << 2) | ((values[5] >> 2) & 3);
@@ -54,8 +54,8 @@ uint8_t NunchukLibrary::ANupdate()
   zButton = !((values[5] >> 0) & 1);
   cButton = !((values[5] >> 1) & 1);
   AN_sendByte(0x00, 0x00);
-
-  //Check in what direction the nunchuk tumbstick is moved and give it to the variable "status"
+  
+  //Kijk in welke richting de nunchuk tumbstick staat en geef die mee aan "status"
   if((analogX - beginPossX) > 75)		status = 2;//X AXIS RIGHT
   else if((beginPossX - analogX) > 75) status = 1;//X AXIS LEFT
   else								status = 0;//X AXIS NO MOVEMENT

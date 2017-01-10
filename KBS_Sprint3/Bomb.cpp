@@ -37,6 +37,8 @@ uint8_t Bomb::getTime(){
 bool Bomb::updatePlayer(){
 	return thisPlayer;
 }
+
+/*
 void Bomb::toString(){
 	Serial.println("Bomb");
 	Serial.print("X:\t");
@@ -46,4 +48,4 @@ void Bomb::toString(){
 	Serial.print("\trange:\t");
 	Serial.print(range);
 }
-
+*/

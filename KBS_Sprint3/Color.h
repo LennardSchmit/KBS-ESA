@@ -1,7 +1,7 @@
 #ifndef COLOR_H_
 #define COLOR_H_
 
-#define P1
+//#define P1
 
 //Colors for drawing players
 #define PLAYERBLACK   RGB(32, 32, 32)     //1     3

@@ -3,6 +3,7 @@
 #include "Arduino.h"
 #include "Color.h"
 
+//Alle ontwerpen voor blokken, karakters en bommen.
 uint8_t destroyableBlock[12][12] = {
   {1,1,1,1,1,1,1,1,1,1,1,1},
   {2,2,2,2,2,1,2,2,2,2,2,1},
@@ -115,6 +116,7 @@ const PROGMEM uint8_t UpWalking[8][12]{
       {0,0,0,0, 0,0,0,1, 1,1,0,0}, 
     };
 
+//Dit is het ontwerp voor de bom
 uint8_t offset[16] = {2, 1, 1, 0, 0, 0, 1, 1, 2, 4, 5, 7, 9, 11, 10, 14};
 
 
@@ -142,7 +144,7 @@ WalkingAnimation::WalkingAnimation(MI0283QT9* lcd_g){
   lcd = lcd_g;
 }
 
-//leg is the feet that is in the air, 0 is right and 1 is left.
+
 void WalkingAnimation::drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mirrorBottom, uint8_t characterTop[8][12], uint8_t characterBottem[8][12]){
   //lcd->fillRect(x-2, y-2, 16, 20 , BLACK);
   if(!mirrorTop)
@@ -164,6 +166,7 @@ void WalkingAnimation::drawCharacter(int x, int y, uint8_t mirrorTop, uint8_t mi
   }  
 }
 
+//Tekent het onderdeel op de gegeven locatie
 void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
   if(player==1){
     for(int i = 0; i < 8; i++){
@@ -210,6 +213,7 @@ void WalkingAnimation::drawPart(int x, int y, uint8_t part[8][12]){
   }
 }
 
+//Tekent het deel gespiegeld
 void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
   if(player==1){
   	for(uint8_t i = 0; i < 8; i++){
@@ -259,6 +263,8 @@ void WalkingAnimation::drawMirrorPart(int x, int y, uint8_t part[8][12]){
     }
   }
 }
+
+//Spiegel alles
 void WalkingAnimation::mirrorAll(){
   if(mirrorTop){
     mirrorTop=0;
@@ -272,6 +278,7 @@ void WalkingAnimation::mirrorAll(){
   }
 }
 
+//Teken de karakter in alle mogelijke richtingen
 void WalkingAnimation::drawUp(int x, int y, uint8_t selectPlayer){
   player = selectPlayer;
   drawCharacter(x, y, mirrorTop, mirrorBottom, Up, UpWalking);
@@ -318,6 +325,7 @@ void WalkingAnimation::drawStanding(int x, int y, uint8_t selectPlayer){
   drawCharacter(x, y, mirrorTop, mirrorBottom, Down, DownStanding);
 }
 
+//Tekent de karakter 3x zo groot
 void WalkingAnimation::drawBigStanding(int x, int y, uint8_t selectPlayer){
   player = selectPlayer;
   drawPartBig(x, y, Down);
@@ -325,6 +333,7 @@ void WalkingAnimation::drawBigStanding(int x, int y, uint8_t selectPlayer){
   drawPartBig(x, y, DownStanding);
 }
 
+//Tekent een deel van de karakter 3x zo groot
 void WalkingAnimation::drawPartBig(int x, int y, uint8_t part[8][12]){
   if(player==1){
     for(int i = 0; i < 24; i+=3){
@@ -373,6 +382,7 @@ void WalkingAnimation::drawPartBig(int x, int y, uint8_t part[8][12]){
   }
 }
 
+//Tekent de bom in de kleur van de speler
 void WalkingAnimation::drawBomb(int x, int y, uint8_t selectPlayer){
   uint8_t *line;
   for(uint8_t i = 0; i < 16; i++){
@@ -434,6 +444,7 @@ void WalkingAnimation::drawBomb(int x, int y, uint8_t selectPlayer){
   delete[]line;
 }
 
+//Tekent het geselecteerde blok
 void WalkingAnimation::drawBlock(int x, int y, uint8_t selectBlock){
   if(selectBlock==0){
     for(int i = 0; i < 24; i+=2){

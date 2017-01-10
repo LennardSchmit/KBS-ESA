@@ -54,7 +54,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106013</Value>
+      <Value>ARDUINO=106011</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -70,6 +70,9 @@
       <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility</Value>
@@ -79,6 +82,7 @@
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard</Value>
       <Value>../../../KBS_Sprint3</Value>
+      <Value>C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
@@ -95,7 +99,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106013</Value>
+      <Value>ARDUINO=106011</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -111,6 +115,9 @@
       <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility</Value>
@@ -120,6 +127,7 @@
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard</Value>
       <Value>../../../KBS_Sprint3</Value>
+      <Value>C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
@@ -154,7 +162,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106013</Value>
+      <Value>ARDUINO=106011</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -170,6 +178,9 @@
       <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility</Value>
@@ -179,6 +190,7 @@
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard</Value>
       <Value>../../../KBS_Sprint3</Value>
+      <Value>C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
@@ -195,7 +207,7 @@
     <ListValues>
       <Value>__AVR_ATmega328p__</Value>
       <Value>__AVR_ATmega328P__</Value>
-      <Value>ARDUINO=106013</Value>
+      <Value>ARDUINO=106011</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
@@ -211,6 +223,9 @@
       <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/digitalWriteFast/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/GraphicsLib/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries/MI0283QT9/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/src/utility</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility</Value>
@@ -220,6 +235,7 @@
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard</Value>
       <Value>../../../KBS_Sprint3</Value>
+      <Value>C:/Program Files (x86)/Atmel/Studio/7.0/Extensions/jznu0fh3.she/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>

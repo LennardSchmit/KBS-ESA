@@ -11,19 +11,30 @@
 #include "AfterGame.h"
 #include "Color.h"
 #include "Menu.h"
+#include "Touch.h"
 
+/****************************************************/
+/* Speler 2 speelt een getrimde versie van de code  */
+/* Speler 2 mist:                                   */
+/*  - Een normaal start menu                        */
+/*  - Highscores opslaan en uitlezen                */
+/*  - Een klok die aftelt                           */
+/*  - Een optie menu                                */
+/****************************************************/
+
+//Als P1 is gedefinieerd dan is het de versie voor speler 1 dit gebeurt in COLOR.H
 #ifdef P1
- #include "Menu.h"
+  #include "Menu.h"
   #include "SaveHighScore.h"
   #include "WatchHighScore.h"
-   #include "OptionMenu.h"
-  #include "Touch.h"
+  #include "OptionMenu.h"
   #include "Timer_Display.h"
   
   volatile boolean timerUpdate = false;
   uint8_t OnehzCounter = 0;
 #endif
 
+//Als p1 niet is gedefinieerd dan is het de versie voor speler 2
 #ifndef P1
 	volatile uint8_t gameStatus = 6;
 #endif
@@ -38,6 +49,7 @@ volatile uint8_t statusBombPlayer = 1;
 uint8_t levelSelect = 1;
 int highscore;
 
+//Dit zijn de levels
 uint8_t level1[9][11] ={
 	{3,0,0,0,0,0,0,0,0,0,0},
 	{0,1,2,1,0,1,2,1,0,1,0},
@@ -72,6 +84,7 @@ irRecv *IRr = new irRecv();
 #ifdef P1
 Timer_Display* timer1;
 #endif
+
 //Verzenden IR
 ISR(TIMER2_COMPB_vect)
 {
@@ -295,9 +308,9 @@ ISR (INT0_vect)
 	}
 }
 
+//hier wordt het level geselecteerd
 void SelectLevel()
 {
-	//levelSelect = getSelectedLevel()
 	switch(levelSelect){
 		case 1:    MP = new Map(level1); break;
 		case 2:    MP = new Map(level2); break;
@@ -312,7 +325,7 @@ int main(void)
 	IRs->setBitCount(0);
 	IRs->setCurByte(0);
 	IRs->setParity(0);
-  Serial.begin(9600);
+  //Serial.begin(9600);
 	lcd = new MI0283QT9();
 	NC = new NunchukLibrary();
 	WA = new WalkingAnimation(lcd);
@@ -320,9 +333,7 @@ int main(void)
   Player* playerIR;
 	lcd->begin();
 
-	#ifdef P1
-		Touch touch(lcd);
-	#endif
+	Touch touch(lcd);
 
 	while(1)
 	{
@@ -416,8 +427,9 @@ int main(void)
     
     #ifdef P1
 		if(gameStatus == 3){
-      Serial.println(playerNC->getTotalBlocksDestroyed());
-      Serial.println(timer1->getTimeLeft()*25);
+      //Hier wordt de score van beide spelers na het spel berekend
+      //Serial.println(playerNC->getTotalBlocksDestroyed());
+      //Serial.println(timer1->getTimeLeft()*25);
       int greenPlayerScore = (playerNC->getTotalBlocksDestroyed()*25) + (playerNC->getLife()*1250) + (timer1->getTimeLeft()*25);
       int redPlayerScore   = (playerIR->getTotalBlocksDestroyed()*25) + (playerIR->getLife()*1250) + (timer1->getTimeLeft()*25);
 		  if(greenPlayerScore<redPlayerScore){
@@ -425,6 +437,7 @@ int main(void)
 		  } else if(greenPlayerScore>redPlayerScore){
         greenPlayerScore+=2500;
 		  }
+      //Die score wordt meegegeven aan het schermpje dat weergegeven wordt.
 		  AfterGame* AG = new AfterGame(lcd, WA, greenPlayerScore, redPlayerScore);
 		  while(1){
   			AG->Update();
@@ -464,6 +477,7 @@ int main(void)
 		}
     #endif
 
+    //De 2e speler moet wachten tot speler 1 het spel start. Dit werkt soms niet daarom hebben we de knop toegevoegd
     #ifndef P1
     if(gameStatus==6){
       lcd->fillScreen(BACKGROUND);
@@ -487,6 +501,7 @@ int main(void)
 	}
 }
 
+//De timer is voor de klok die aftelt tijdens het spel
 #ifdef P1
 void setTimer1()
 {
